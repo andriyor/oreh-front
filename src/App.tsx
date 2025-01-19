@@ -71,7 +71,7 @@ const AddNodeOnEdgeDrop = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState<AppNode>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
-  useEffect(() => {
+  const fetchGraph = () => {
     fetch('http://localhost:3000/graph').then(response => response.json()).then(json => {
       console.log('json', json)
       const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
@@ -87,6 +87,10 @@ const AddNodeOnEdgeDrop = () => {
       setNodes(layoutedNodes);
       setEdges(layoutedEdges);
     })
+  }
+
+  useEffect(() => {
+    fetchGraph()
   }, [])
   
   const { screenToFlowPosition } = useReactFlow();
@@ -104,13 +108,14 @@ const AddNodeOnEdgeDrop = () => {
 
   const updateNodeData = useCallback((nodeId, newData) => {
     console.log('updateNodeData', nodeId, newData)
-    setNodes((nds) =>
-      nds.map((node) =>
-        node.id === nodeId
-          ? { ...node, data: { ...node.data, ...newData, time: node.data.time + newData.time } }
-          : node
-      )
-    );
+    fetchGraph();
+    // setNodes((nds) =>
+    //   nds.map((node) =>
+    //     node.id === nodeId
+    //       ? { ...node, data: { ...node.data, ...newData, time: node.data.time + newData.time } }
+    //       : node
+    //   )
+    // );
   }, []);
 
   const augmentedNodes = nodes.map((node) => {
