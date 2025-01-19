@@ -2,29 +2,22 @@ import { useCallback } from "react";
 import { Handle, Position } from "@xyflow/react";
 import { TimerApp } from "./Timer";
 
+export type TimeEntry = {
+  time: number;
+  startTime: string;
+  stopTime: string;
+};
+
 export function TextUpdaterNode(data) {
   const onChange = useCallback((evt: any) => {
     console.log(evt.target.value);
   }, []);
-  
 
-  const handleStop = (time: { time: number; startTime: string; stopTime: string }) => {
-    console.log('data.data', data)
-    data.data.updateParent(data.data.parentId, {time})
-    console.log('handleStop', data.data.parentId, time)
-    fetch('http://localhost:3000/entry', {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        "duration": time.time,
-        "startTime": time.startTime,
-        "stopTime": time.stopTime,
-        "nodeId": data.id
-      })
-    })
-  }
+  const handleStop = (time: TimeEntry) => {
+    console.log("data.data", data);
+    data.data.updateParent(data.data.parentId, time);
+    console.log("handleStop", data.id, time);
+  };
 
   return (
     <div style={{ padding: "10px", border: "solid" }}>
@@ -43,7 +36,7 @@ export function TextUpdaterNode(data) {
           <input id="text" name="text" onChange={onChange} className="nodrag" />
         </div>
         <div>
-          <TimerApp duration={data.data.duration} onStop={handleStop}/>
+          <TimerApp duration={data.data.duration} onStop={handleStop} />
         </div>
       </div>
 

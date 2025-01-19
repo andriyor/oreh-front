@@ -22,6 +22,7 @@ import { edgeTypes } from "./edges";
 
 import dagre from "@dagrejs/dagre";
 import { AppNode } from "./nodes/types";
+import { TimeEntry } from "./nodes/TextUpdaterNode";
 
 const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
 
@@ -62,37 +63,38 @@ const getLayoutedElements = (nodes, edges, direction = "TB") => {
   return { nodes: newNodes, edges };
 };
 
-
 let id = 1;
 const getId = () => `${id++}`;
 
 const AddNodeOnEdgeDrop = () => {
-
   const [nodes, setNodes, onNodesChange] = useNodesState<AppNode>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
   const fetchGraph = () => {
-    fetch('http://localhost:3000/graph').then(response => response.json()).then(json => {
-      console.log('json', json)
-      const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
-        json.nodes.map(node => {
-          return {
-            ...node,
-            type: "text-node",
-          }
-        }),
-        json.edges,
-        "LR"
-      );
-      setNodes(layoutedNodes);
-      setEdges(layoutedEdges);
-    })
-  }
+    fetch("http://localhost:3000/graph")
+      .then((response) => response.json())
+      .then((json) => {
+        console.log("json", json);
+        const { nodes: layoutedNodes, edges: layoutedEdges } =
+          getLayoutedElements(
+            json.nodes.map((node) => {
+              return {
+                ...node,
+                type: "text-node",
+              };
+            }),
+            json.edges,
+            "LR"
+          );
+        setNodes(layoutedNodes);
+        setEdges(layoutedEdges);
+      });
+  };
 
   useEffect(() => {
-    fetchGraph()
-  }, [])
-  
+    fetchGraph();
+  }, []);
+
   const { screenToFlowPosition } = useReactFlow();
 
   const onConnect = useCallback(
@@ -106,9 +108,23 @@ const AddNodeOnEdgeDrop = () => {
     []
   );
 
-  const updateNodeData = useCallback((nodeId, newData) => {
-    console.log('updateNodeData', nodeId, newData)
-    fetchGraph();
+  const updateNodeData = useCallback((nodeId: number, time: TimeEntry) => {
+    console.log("updateNodeData", nodeId, time);
+    fetch("http://localhost:3000/entry", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        nodeId: nodeId,
+        duration: time.time,
+        startTime: time.startTime,
+        stopTime: time.stopTime,
+      }),
+    }).then(() => {
+      fetchGraph();
+    });
+
     // setNodes((nds) =>
     //   nds.map((node) =>
     //     node.id === nodeId
@@ -150,6 +166,10 @@ const AddNodeOnEdgeDrop = () => {
           origin: [0.0, 0.5],
         };
 
+        fetch(`http://localhost:3000/node/${connectionState.fromNode.id}`, {
+          method: "POST",
+        });
+
         setNodes((nds) => nds.concat(newNode));
         setEdges((eds) =>
           eds.concat({ id, source: connectionState.fromNode.id, target: id })
@@ -158,6 +178,15 @@ const AddNodeOnEdgeDrop = () => {
     },
     [screenToFlowPosition]
   );
+
+  const onNodesDelete = (nodes: AppNode[]) => {
+    console.log('node del', nodes  )
+    nodes.forEach(node => {
+      fetch(`http://localhost:3000/node/${node.id}`, {
+        method: "DELETE",
+      });
+    })
+  }
 
   return (
     <ReactFlow
@@ -168,6 +197,7 @@ const AddNodeOnEdgeDrop = () => {
       edgeTypes={edgeTypes}
       onEdgesChange={onEdgesChange}
       onConnect={onConnect}
+      onNodesDelete={onNodesDelete}
       onConnectEnd={onConnectEnd}
       fitView
     >
