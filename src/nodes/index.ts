@@ -7,21 +7,23 @@ import { AppNode } from "./types";
 const position = { x: 0, y: 0 };
 
 export const initialNodes: AppNode[] = [
-  { id: "a", position, type: "input", data: { label: "wire" } },
+  { id: "a", position, type: "text-node", data: { label: "wire" } },
   {
     id: "b",
     type: "text-node",
     position,
-    data: { label: "drag me!" , time: 56},
+    data: { label: "drag me!", time: 56 },
   },
   {
     id: "c",
+    type: "text-node",
     position,
     data: { label: "your ideas" },
   },
   {
     id: "d",
     position,
+    type: "text-node",
     data: { label: "with React Flow" },
   },
 ];

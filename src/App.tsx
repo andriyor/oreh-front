@@ -23,7 +23,7 @@ import dagre from "@dagrejs/dagre";
 
 const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
 
-const nodeWidth = 172;
+const nodeWidth = 450;
 const nodeHeight = 36;
 
 const getLayoutedElements = (nodes, edges, direction = "TB") => {
