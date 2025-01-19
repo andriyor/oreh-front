@@ -12,14 +12,16 @@ import {
   useReactFlow,
   ReactFlowProvider,
   Position,
+  Edge,
 } from "@xyflow/react";
 
 import "@xyflow/react/dist/style.css";
 
-import { initialNodes, nodeTypes } from "./nodes";
-import { initialEdges, edgeTypes } from "./edges";
+import { nodeTypes } from "./nodes";
+import { edgeTypes } from "./edges";
 
 import dagre from "@dagrejs/dagre";
+import { AppNode } from "./nodes/types";
 
 const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
 
@@ -60,26 +62,33 @@ const getLayoutedElements = (nodes, edges, direction = "TB") => {
   return { nodes: newNodes, edges };
 };
 
-const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
-  initialNodes,
-  initialEdges,
-  "LR"
-);
 
 let id = 1;
 const getId = () => `${id++}`;
 
 const AddNodeOnEdgeDrop = () => {
 
+  const [nodes, setNodes, onNodesChange] = useNodesState<AppNode>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
+
   useEffect(() => {
     fetch('http://localhost:3000/graph').then(response => response.json()).then(json => {
       console.log('json', json)
+      const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
+        json.nodes.map(node => {
+          return {
+            ...node,
+            type: "text-node",
+          }
+        }),
+        json.edges,
+        "LR"
+      );
+      setNodes(layoutedNodes);
+      setEdges(layoutedEdges);
     })
   }, [])
-
-
-  const [nodes, setNodes, onNodesChange] = useNodesState(layoutedNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(layoutedEdges);
+  
   const { screenToFlowPosition } = useReactFlow();
 
   const onConnect = useCallback(
@@ -103,8 +112,6 @@ const AddNodeOnEdgeDrop = () => {
       )
     );
   }, []);
-
-  console.log('nodes', nodes)
 
   const augmentedNodes = nodes.map((node) => {
     return {

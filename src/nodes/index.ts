@@ -28,6 +28,11 @@ export const initialNodes: AppNode[] = [
   },
 ];
 
+// export const initialNodes: AppNode[] = [
+//   { id: "6302ef00-980e-4496-8fab-c6d7f898c5c8", data: { label: "your ideas" } },
+//   { id: "263755b0-df85-4694-9c29-e3858ed81f46", data: { label: "node 2" } },
+// ];
+
 export const nodeTypes = {
   "position-logger": PositionLoggerNode,
   "text-node": TextUpdaterNode,
