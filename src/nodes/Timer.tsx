@@ -58,7 +58,7 @@ export const TimerApp = ({
           </button>
         )}
       </div>
-      <div style={{ marginRight: "5px" }}>T: {totalTime}</div>
+      <div className="mr-2">T: {totalTime}</div>
       {isRunning && <div>C: {timeElapsed}</div>}
     </div>
   );
