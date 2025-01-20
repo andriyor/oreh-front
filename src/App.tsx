@@ -23,6 +23,7 @@ import { edgeTypes } from "./edges";
 import dagre from "@dagrejs/dagre";
 import { AppNode, NodeData } from "./nodes/types";
 import { TimeEntry } from "./nodes/TextUpdaterNode";
+import { EntryList } from "./components/EntryList";
 
 const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
 
@@ -109,12 +110,15 @@ const AddNodeOnEdgeDrop = () => {
   );
 
   const updateNodeData = (nodeId: string, nodeData: NodeData) => {
+    const { label } = nodeData;
     fetch(`http://localhost:3000/node/${nodeId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(nodeData),
+      body: JSON.stringify({
+        label,
+      }),
     }).then(() => {});
   };
 
@@ -172,14 +176,14 @@ const AddNodeOnEdgeDrop = () => {
           type: "text-node",
           targetPosition: Position.Left,
           sourcePosition: Position.Right,
-          data: { label: `Node ${id}`, parentId: connectionState.fromNode.id },
+          data: { label: `Node ${id}` },
         };
 
         fetch(`http://localhost:3000/node/${connectionState.fromNode.id}`, {
           method: "POST",
         }).then(() => {
           fetchGraph();
-        })
+        });
 
         setNodes((nds) => nds.concat(newNode));
         setEdges((eds) =>
@@ -220,7 +224,12 @@ const AddNodeOnEdgeDrop = () => {
 };
 
 export default () => (
-  <ReactFlowProvider>
-    <AddNodeOnEdgeDrop />
-  </ReactFlowProvider>
+  <div style={{height: '100%'}}>
+    <div style={{ height: "60%" }}>
+      <ReactFlowProvider>
+        <AddNodeOnEdgeDrop />
+      </ReactFlowProvider>
+    </div>
+    <EntryList />
+  </div>
 );

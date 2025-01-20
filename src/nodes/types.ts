@@ -1,12 +1,27 @@
 import type { Node, BuiltInNode } from "@xyflow/react";
 import { TimeEntry } from "./TextUpdaterNode";
 
-type Entry = {
+export type Entry = {
   id: string;
   duration: number;
   startTime: string;
   stopTime: string;
   nodeId: string;
+};
+
+export type BaseNode = {
+  id: string;
+  data: {
+    label: string;
+  };
+};
+
+export type EntryWithNode = {
+  id: string;
+  duration: number;
+  startTime: string;
+  stopTime: string;
+  node: BaseNode;
 };
 
 export type NodeData = {
