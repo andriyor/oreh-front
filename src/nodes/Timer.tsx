@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 
+import Stop from "../icons/stop-solid.svg";
+import Play from "../icons/play-solid.svg";
+
 export const TimerApp = ({
   duration,
   onStop,
@@ -46,9 +49,13 @@ export const TimerApp = ({
     <div style={{ display: "flex" }}>
       <div style={{ marginRight: "10px" }}>
         {isRunning ? (
-          <button onClick={stopTimer}>Stop Timer</button>
+          <button onClick={stopTimer}>
+            <img src={Stop} height="15px"/>
+          </button>
         ) : (
-          <button onClick={startTimer}>Start timer</button>
+          <button onClick={startTimer}>
+            <img src={Play} height="15px"/>
+          </button>
         )}
       </div>
       <div style={{ marginRight: "5px" }}>T: {totalTime}</div>
