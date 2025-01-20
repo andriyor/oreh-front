@@ -1,6 +1,7 @@
-import { useCallback } from "react";
-import { Handle, Position } from "@xyflow/react";
+import { useCallback, useEffect, useState } from "react";
+import { Handle, Position, useEdges } from "@xyflow/react";
 import { TimerApp } from "./Timer";
+import { TextNode } from "./types";
 
 export type TimeEntry = {
   time: number;
@@ -8,14 +9,36 @@ export type TimeEntry = {
   stopTime: string;
 };
 
-export function TextUpdaterNode(data) {
-  const onChange = useCallback((evt: any) => {
-    console.log(evt.target.value);
-  }, []);
+function debounce(func: Function, delay: number) {
+  let timeout: number;
+  return (...args: any) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), delay);
+  };
+}
+
+export function TextUpdaterNode(data: TextNode) {
+  const [inputValue, setInputValue] = useState(data.data.label || '');
+
+  const handleDebouncedChange = useCallback(
+    debounce((value: string) => {
+      data.data.updateNodeData(data.id, {
+        ...data.data,
+        label: value,
+      });
+    }, 500),
+    []
+  );
+
+  const handleChange = (event:  React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = event.target.value;
+    setInputValue(newValue);
+    handleDebouncedChange(newValue);
+  };
 
   const handleStop = (time: TimeEntry) => {
     console.log("data.data", data);
-    data.data.updateParent(data.data.parentId, time);
+    data.data.addTimeEntryToNode(data.id, time);
     console.log("handleStop", data.id, time);
   };
 
@@ -28,15 +51,20 @@ export function TextUpdaterNode(data) {
             id="checkbox"
             type="checkbox"
             name="checkbox"
-            onChange={onChange}
             className="nodrag"
           />
         </div>
         <div style={{ marginRight: "10px" }}>
-          <input id="text" name="text" onChange={onChange} className="nodrag" />
+          <input
+            id="text"
+            name="text"
+            value={inputValue}
+            onChange={handleChange}
+            className="nodrag"
+          />
         </div>
         <div>
-          <TimerApp duration={data.data.duration} onStop={handleStop} />
+          <TimerApp duration={data.data.commulativeDuration} onStop={handleStop} />
         </div>
       </div>
 

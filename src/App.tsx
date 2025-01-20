@@ -21,7 +21,7 @@ import { nodeTypes } from "./nodes";
 import { edgeTypes } from "./edges";
 
 import dagre from "@dagrejs/dagre";
-import { AppNode } from "./nodes/types";
+import { AppNode, NodeData } from "./nodes/types";
 import { TimeEntry } from "./nodes/TextUpdaterNode";
 
 const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
@@ -108,8 +108,17 @@ const AddNodeOnEdgeDrop = () => {
     []
   );
 
-  const updateNodeData = useCallback((nodeId: number, time: TimeEntry) => {
-    console.log("updateNodeData", nodeId, time);
+  const updateNodeData = (nodeId: string, nodeData: NodeData) => {
+    fetch(`http://localhost:3000/node/${nodeId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(nodeData),
+    }).then(() => {});
+  };
+
+  const addTimeEntryToNode = useCallback((nodeId: number, time: TimeEntry) => {
     fetch("http://localhost:3000/entry", {
       method: "POST",
       headers: {
@@ -139,7 +148,8 @@ const AddNodeOnEdgeDrop = () => {
       ...node,
       data: {
         ...node.data,
-        updateParent: updateNodeData,
+        updateNodeData,
+        addTimeEntryToNode,
       },
     };
   });
@@ -163,12 +173,13 @@ const AddNodeOnEdgeDrop = () => {
           targetPosition: Position.Left,
           sourcePosition: Position.Right,
           data: { label: `Node ${id}`, parentId: connectionState.fromNode.id },
-          origin: [0.0, 0.5],
         };
 
         fetch(`http://localhost:3000/node/${connectionState.fromNode.id}`, {
           method: "POST",
-        });
+        }).then(() => {
+          fetchGraph();
+        })
 
         setNodes((nds) => nds.concat(newNode));
         setEdges((eds) =>
@@ -180,13 +191,13 @@ const AddNodeOnEdgeDrop = () => {
   );
 
   const onNodesDelete = (nodes: AppNode[]) => {
-    console.log('node del', nodes  )
-    nodes.forEach(node => {
+    console.log("node del", nodes);
+    nodes.forEach((node) => {
       fetch(`http://localhost:3000/node/${node.id}`, {
         method: "DELETE",
       });
-    })
-  }
+    });
+  };
 
   return (
     <ReactFlow
