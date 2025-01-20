@@ -17,7 +17,7 @@ export const TimerApp = ({
   }, [duration]);
 
   useEffect(() => {
-    let timer;
+    let timer: number;
     if (isRunning) {
       timer = setInterval(() => {
         setTimeElapsed((prev) => prev + 1);
@@ -26,33 +26,33 @@ export const TimerApp = ({
     return () => clearInterval(timer); // Cleanup on component unmount or when isRunning changes
   }, [isRunning]);
 
-  const togglTimer = () => {
-    if (isRunning) {
-      onStop({
-        time: timeElapsed,
-        startTime: startTime,
-        stopTime: new Date().toISOString(),
-      });
-      setTotalTime(timeElapsed + totalTime);
-      setTimeElapsed(0);
-    }
+  const stopTimer = () => {
+    onStop({
+      time: timeElapsed,
+      startTime: startTime,
+      stopTime: new Date().toISOString(),
+    });
+    setTotalTime(timeElapsed + totalTime);
+    setTimeElapsed(0);
+    setIsRunning(false);
+  };
 
-    if (!isRunning) {
-      setStartTime(new Date().toISOString());
-    }
-
-    setIsRunning(!isRunning);
+  const startTimer = () => {
+    setStartTime(new Date().toISOString());
+    setIsRunning(true);
   };
 
   return (
     <div style={{ display: "flex" }}>
       <div style={{ marginRight: "10px" }}>
-        <button onClick={togglTimer}>
-          {isRunning ? "Stop Timer" : "Start timer"}
-        </button>
+        {isRunning ? (
+          <button onClick={stopTimer}>Stop Timer</button>
+        ) : (
+          <button onClick={startTimer}>Start timer</button>
+        )}
       </div>
       <div style={{ marginRight: "5px" }}>T: {totalTime}</div>
-      <div>C: {timeElapsed}</div>
+      {isRunning && <div>C: {timeElapsed}</div>}
     </div>
   );
 };
