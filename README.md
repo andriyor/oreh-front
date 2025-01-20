@@ -1,3 +1,26 @@
+# OREH
+
+## TODO
+
+
+- [x] render tree view
+- [x] text input for node
+- [x] add node
+- [x] delete node
+- [x] track time node
+- [x] show total time for node
+- [ ] show time entries of node
+- [ ] edit time entries
+- [ ] tags for time entries
+- [ ] calculate total based on month/week/day
+- [ ] checkbox  
+- [ ] chart by node time
+- [ ] chart by tag time
+- [ ] show/expand node
+
+
+
+
 ![](https://github.com/xyflow/web/blob/main/assets/codesandbox-header-ts.png?raw=true)
 
 # React Flow starter (Vite + TS)
