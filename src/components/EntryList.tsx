@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { EntryWithNode } from "../nodes/types";
 import { format } from "date-fns";
 import { groupBy } from "lodash";
+import { Entry } from "./Entry";
 
 export const EntryList = () => {
   const [entries, setEntries] = useState<EntryWithNode[]>([]);
@@ -23,16 +24,7 @@ export const EntryList = () => {
           <div>
             <div>Day: {day}</div>
             {groupped[day].map((entry) => (
-              <div className="flex">
-                <div className="mr-5">Node: {entry.node.data.label}</div>
-                <div className="mr-5">
-                  Start: {format(entry.startTime, "HH:mm")}
-                </div>
-                <div className="mr-5">
-                  Stop: {format(entry.stopTime, "HH:mm")}
-                </div>
-                <div>Duration: {entry.duration}</div>
-              </div>
+              <Entry entry={entry}/>
             ))}
           </div>
         );
