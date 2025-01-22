@@ -1,4 +1,5 @@
-import { format } from "date-fns";
+import { useState, useRef } from "react";
+import { format, setHours, setMinutes } from "date-fns";
 import {
   autoUpdate,
   flip,
@@ -11,16 +12,67 @@ import {
   useInteractions,
   useRole,
 } from "@floating-ui/react";
+
 import { EntryWithNode } from "../nodes/types";
-import { useState } from "react";
 
 export const Time = ({ entry }: { entry: EntryWithNode }) => {
+  const [localEntry, setLocalEntry] = useState(entry);
   const [isOpen, setIsOpen] = useState(false);
+
+  const initialStartTime = useRef(new Date(localEntry.startTime));
+  const initialStopTime = useRef(new Date(localEntry.stopTime));
+
+  const [formatedStartTime, setFormatedStartTime] = useState(
+    format(localEntry.startTime, "HH:mm")
+  );
+  const [formatedStopTime, setFormatedStopTime] = useState(
+    format(localEntry.startTime, "HH:mm")
+  );
+
+  const updateHoursAndMinutes = (
+    newHoursMinutesTime: string,
+    initialTime: Date
+  ) => {
+    const [startHours, startMinutes] = newHoursMinutesTime.split(":");
+    return setHours(
+      setMinutes(initialTime, Number(startMinutes)),
+      Number(startHours)
+    );
+  };
+
+  const onOpenChange = (value: boolean) => {
+    setIsOpen(value);
+
+    if (!value) {
+      const newStartTime = updateHoursAndMinutes(
+        formatedStartTime,
+        initialStartTime.current
+      );
+      const newStopTime = updateHoursAndMinutes(
+        formatedStopTime,
+        initialStopTime.current
+      );
+
+      fetch(`http://127.0.0.1:3000/entry/${localEntry.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          duration: localEntry.duration,
+          startTime: newStartTime,
+          stopTime: newStopTime,
+        }),
+      })
+        .then((res) => res.json())
+        .then((json) => setLocalEntry(json));
+    }
+  };
 
   const { refs, floatingStyles, context } = useFloating({
     open: isOpen,
     // placement: 'bottom',
-    onOpenChange: setIsOpen,
+    onOpenChange,
     middleware: [
       offset(10),
       flip({ fallbackAxisSideDirection: "end" }),
@@ -42,7 +94,8 @@ export const Time = ({ entry }: { entry: EntryWithNode }) => {
   return (
     <div>
       <div ref={refs.setReference} {...getReferenceProps()}>
-        {format(entry.startTime, "HH:mm")} - {format(entry.stopTime, "HH:mm")}
+        <span className="mr-2">{format(localEntry.startTime, "HH:mm")}</span>
+        <span>{format(localEntry.stopTime, "HH:mm")}</span>
       </div>
       {isOpen && (
         <FloatingFocusManager context={context} modal={false}>
@@ -53,10 +106,20 @@ export const Time = ({ entry }: { entry: EntryWithNode }) => {
           >
             <div className="flex">
               <div>
-                Start: <input type="text" value={format(entry.startTime, "HH:mm")} />
+                <div>Start:</div>
+                <input
+                  type="text"
+                  defaultValue={formatedStartTime}
+                  onChange={(e) => setFormatedStartTime(e.target.value)}
+                />
               </div>
               <div>
-                Stop: <input type="text" value={format(entry.stopTime, "HH:mm")} />
+                <div>Stop:</div>
+                <input
+                  type="text"
+                  defaultValue={formatedStartTime}
+                  onChange={(e) => setFormatedStopTime(e.target.value)}
+                />
               </div>
             </div>
           </div>
