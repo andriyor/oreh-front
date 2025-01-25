@@ -20,9 +20,13 @@ import { nodeTypes } from "./nodes";
 import { edgeTypes } from "./edges";
 
 import dagre from "@dagrejs/dagre";
-import { AppNode, EntryToCreate, NodeData } from "./nodes/types";
+import { AppNode, Entry, EntryToCreate, NodeData } from "./nodes/types";
 import { EntryList } from "./components/EntryList";
-import { QueryClient, QueryClientProvider, useMutation } from "@tanstack/react-query";
+import {
+  QueryClient,
+  QueryClientProvider,
+  useMutation,
+} from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
@@ -140,9 +144,9 @@ const AddNodeOnEdgeDrop = (props: {
     }).then(() => {});
   };
 
-  const mutation = useMutation({
-    mutationFn: (entry: EntryToCreate) => {
-      return fetch("http://localhost:3000/entry", {
+  const entryMutation = useMutation({
+    mutationFn: async (entry: EntryToCreate) => {
+      const respone = await fetch("http://localhost:3000/entry", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -153,12 +157,14 @@ const AddNodeOnEdgeDrop = (props: {
           startTime: entry.startTime,
           stopTime: entry.stopTime,
         }),
-      })
+      });
+      return await respone.json();
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      queryClient.setQueryData(['entry'], (old: Entry[]) => [data, ...old]);
       fetchGraph();
     },
-  })
+  });
 
   const augmentedNodes = nodes.map((node) => {
     return {
@@ -166,7 +172,7 @@ const AddNodeOnEdgeDrop = (props: {
       data: {
         ...node.data,
         updateNodeData,
-        addTimeEntryToNode: mutation.mutate,
+        addTimeEntryToNode: entryMutation.mutate,
       },
     };
   });
