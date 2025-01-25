@@ -11,6 +11,8 @@
   "dependencies": {
     "@dagrejs/dagre": "^1.1.4",
     "@floating-ui/react": "^0.27.3",
+    "@tanstack/react-query": "^5.64.2",
+    "@tanstack/react-query-devtools": "^5.64.2",
     "@xyflow/react": "^12.3.6",
     "date-fns": "^4.1.0",
     "lodash": "^4.17.21",

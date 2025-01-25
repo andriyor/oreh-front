@@ -4,10 +4,16 @@ import Stop from "../icons/stop-solid.svg";
 import Play from "../icons/play-solid.svg";
 import { formatSeconds } from "../helpers";
 
+export type Timer = {
+  duration: number;
+  startTime: string;
+  stopTime: string;
+};
+
 export const TimerApp = (props: {
   isRunning?: boolean;
   duration?: number;
-  onStop: (time: { time: number; startTime: string; stopTime: string }) => void;
+  onStop: (time: Timer) => void;
 }) => {
   const [totalTime, setTotalTime] = useState(0);
   const [timeElapsed, setTimeElapsed] = useState(0);
@@ -30,7 +36,7 @@ export const TimerApp = (props: {
 
   const stopTimer = () => {
     props.onStop({
-      time: timeElapsed,
+      duration: timeElapsed,
       startTime: startTime,
       stopTime: new Date().toISOString(),
     });
@@ -48,18 +54,18 @@ export const TimerApp = (props: {
     if (props.isRunning) {
       startTimer();
     }
-  }, [props.isRunning])
+  }, [props.isRunning]);
 
   return (
     <div style={{ display: "flex" }}>
       <div style={{ marginRight: "10px" }}>
         {isRunning ? (
           <button onClick={stopTimer}>
-            <img src={Stop} height="15px"/>
+            <img src={Stop} height="15px" />
           </button>
         ) : (
           <button onClick={startTimer}>
-            <img src={Play} height="15px"/>
+            <img src={Play} height="15px" />
           </button>
         )}
       </div>

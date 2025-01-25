@@ -20,9 +20,10 @@ import { nodeTypes } from "./nodes";
 import { edgeTypes } from "./edges";
 
 import dagre from "@dagrejs/dagre";
-import { AppNode, NodeData } from "./nodes/types";
-import { TimeEntry } from "./nodes/TextUpdaterNode";
+import { AppNode, EntryToCreate, NodeData } from "./nodes/types";
 import { EntryList } from "./components/EntryList";
+import { QueryClient, QueryClientProvider, useMutation } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
 
@@ -139,30 +140,25 @@ const AddNodeOnEdgeDrop = (props: {
     }).then(() => {});
   };
 
-  const addTimeEntryToNode = useCallback((nodeId: number, time: TimeEntry) => {
-    fetch("http://localhost:3000/entry", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        nodeId: nodeId,
-        duration: time.time,
-        startTime: time.startTime,
-        stopTime: time.stopTime,
-      }),
-    }).then(() => {
+  const mutation = useMutation({
+    mutationFn: (entry: EntryToCreate) => {
+      return fetch("http://localhost:3000/entry", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nodeId: entry.nodeId,
+          duration: entry.duration,
+          startTime: entry.startTime,
+          stopTime: entry.stopTime,
+        }),
+      })
+    },
+    onSuccess: () => {
       fetchGraph();
-    });
-
-    // setNodes((nds) =>
-    //   nds.map((node) =>
-    //     node.id === nodeId
-    //       ? { ...node, data: { ...node.data, ...newData, time: node.data.time + newData.time } }
-    //       : node
-    //   )
-    // );
-  }, []);
+    },
+  })
 
   const augmentedNodes = nodes.map((node) => {
     return {
@@ -170,7 +166,7 @@ const AddNodeOnEdgeDrop = (props: {
       data: {
         ...node.data,
         updateNodeData,
-        addTimeEntryToNode,
+        addTimeEntryToNode: mutation.mutate,
       },
     };
   });
@@ -260,4 +256,11 @@ const Wrapper = () => {
   );
 };
 
-export default () => <Wrapper />;
+const queryClient = new QueryClient();
+
+export default () => (
+  <QueryClientProvider client={queryClient}>
+    <Wrapper />;
+    <ReactQueryDevtools initialIsOpen={false} />
+  </QueryClientProvider>
+);

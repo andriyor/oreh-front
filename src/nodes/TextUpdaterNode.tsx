@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useState } from "react";
-import { Handle, Position, useEdges } from "@xyflow/react";
-import { TimerApp } from "./Timer";
+import { useCallback, useState } from "react";
+import { Handle, Position } from "@xyflow/react";
+import { Timer, TimerApp } from "./Timer";
 import { TextNode } from "./types";
+
 export type TimeEntry = {
   time: number;
   startTime: string;
@@ -35,8 +36,8 @@ export function TextUpdaterNode(data: TextNode) {
     handleDebouncedChange(newValue);
   };
 
-  const handleStop = (time: TimeEntry) => {
-    data.data.addTimeEntryToNode(data.id, time);
+  const handleStop = (time: Timer) => {
+    data.data.addTimeEntryToNode({...time, nodeId: data.id });
   };
 
   return (

@@ -1,12 +1,16 @@
 import type { Node } from "@xyflow/react";
-import { TimeEntry } from "./TextUpdaterNode";
 
-export type Entry = {
-  id: string;
+
+export type EntryToCreate = {
   duration: number;
   startTime: string;
   stopTime: string;
   nodeId: string;
+};
+
+
+export type Entry = EntryToCreate & {
+  id: string;
 };
 
 export type BaseNode = {
@@ -39,7 +43,7 @@ export type NodeData = {
   parentId: string;
   commulativeDuration: number;
   totalTimeEntriersDuration: number;
-  addTimeEntryToNode: (nodeId: string, time: TimeEntry) => void;
+  addTimeEntryToNode: (time: EntryToCreate) => void;
   updateNodeData: (nodeId: string, nodeData: NodeData) => void;
 };
 
