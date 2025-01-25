@@ -4,10 +4,8 @@ import Stop from "../icons/stop-solid.svg";
 import Play from "../icons/play-solid.svg";
 import { formatSeconds } from "../helpers";
 
-export const TimerApp = ({
-  duration,
-  onStop,
-}: {
+export const TimerApp = (props: {
+  isRunning?: boolean;
   duration?: number;
   onStop: (time: { time: number; startTime: string; stopTime: string }) => void;
 }) => {
@@ -17,8 +15,8 @@ export const TimerApp = ({
   const [startTime, setStartTime] = useState("");
 
   useEffect(() => {
-    setTotalTime(duration || 0);
-  }, [duration]);
+    setTotalTime(props.duration || 0);
+  }, [props.duration]);
 
   useEffect(() => {
     let timer: number;
@@ -27,11 +25,11 @@ export const TimerApp = ({
         setTimeElapsed((prev) => prev + 1);
       }, 1000);
     }
-    return () => clearInterval(timer); // Cleanup on component unmount or when isRunning changes
+    return () => clearInterval(timer);
   }, [isRunning]);
 
   const stopTimer = () => {
-    onStop({
+    props.onStop({
       time: timeElapsed,
       startTime: startTime,
       stopTime: new Date().toISOString(),
@@ -45,6 +43,12 @@ export const TimerApp = ({
     setStartTime(new Date().toISOString());
     setIsRunning(true);
   };
+
+  useEffect(() => {
+    if (props.isRunning) {
+      startTimer();
+    }
+  }, [props.isRunning])
 
   return (
     <div style={{ display: "flex" }}>

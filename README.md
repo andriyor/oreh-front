@@ -19,13 +19,15 @@
 - [ ] time entry
   - [x] edit
   - [x] highlight in tree
-  - [ ] srart
+  - [x] srart
   - [ ] delete
   - [ ] tags
 - [ ] dashboard
   - [ ] chart by node time
   - [ ] chart by tag time
 
+tech:
+- [ ] rect query 
 
 
 

@@ -35,6 +35,7 @@ export type NodeData = {
   time?: number;
   entry: Entry;
   hightlight?: boolean;
+  isRunning?: boolean;
   parentId: string;
   commulativeDuration: number;
   totalTimeEntriersDuration: number;

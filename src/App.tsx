@@ -7,7 +7,6 @@ import {
   addEdge,
   useNodesState,
   useEdgesState,
-  type OnConnect,
   ConnectionLineType,
   useReactFlow,
   ReactFlowProvider,
@@ -67,7 +66,10 @@ const getLayoutedElements = (nodes, edges, direction = "TB") => {
 let id = 1;
 const getId = () => `${id++}`;
 
-const AddNodeOnEdgeDrop = (props: { currentNodeId: string }) => {
+const AddNodeOnEdgeDrop = (props: {
+  currentNodeId: string;
+  runningNodeid: string;
+}) => {
   const [nodes, setNodes, onNodesChange] = useNodesState<AppNode>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
@@ -101,7 +103,11 @@ const AddNodeOnEdgeDrop = (props: { currentNodeId: string }) => {
       nds.map((node) => {
         return {
           ...node,
-          data: { ...node.data, hightlight: node.id === props.currentNodeId },
+          data: {
+            ...node.data,
+            hightlight: node.id === props.currentNodeId,
+            isRunning: node.id === props.runningNodeid,
+          },
         };
       })
     );
@@ -206,7 +212,6 @@ const AddNodeOnEdgeDrop = (props: { currentNodeId: string }) => {
   );
 
   const onNodesDelete = (nodes: AppNode[]) => {
-    console.log("node del", nodes);
     nodes.forEach((node) => {
       fetch(`http://localhost:3000/node/${node.id}`, {
         method: "DELETE",
@@ -236,14 +241,21 @@ const AddNodeOnEdgeDrop = (props: { currentNodeId: string }) => {
 
 const Wrapper = () => {
   const [nodeid, setNodeId] = useState("");
+  const [runningNodeid, setRunningNodeId] = useState("");
   return (
     <div style={{ height: "100%" }}>
       <div style={{ height: "60%" }}>
         <ReactFlowProvider>
-          <AddNodeOnEdgeDrop currentNodeId={nodeid} />
+          <AddNodeOnEdgeDrop
+            currentNodeId={nodeid}
+            runningNodeid={runningNodeid}
+          />
         </ReactFlowProvider>
       </div>
-      <EntryList onClick={(id) => setNodeId(id)} />
+      <EntryList
+        onClick={(id) => setNodeId(id)}
+        onStartTimer={(id) => setRunningNodeId(id)}
+      />
     </div>
   );
 };

@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
-import { EntryWithNode } from "../nodes/types";
 import { format } from "date-fns";
 import { groupBy } from "lodash";
+
+import { EntryWithNode } from "../nodes/types";
 import { Entry } from "./Entry";
 
-export const EntryList = (props: { onClick: (id: string) => void }) => {
+export const EntryList = (props: {
+  onClick: (id: string) => void;
+  onStartTimer: (nodeId: string) => void;
+}) => {
   const [entries, setEntries] = useState<EntryWithNode[]>([]);
 
   useEffect(() => {
@@ -28,7 +32,10 @@ export const EntryList = (props: { onClick: (id: string) => void }) => {
                 className="mb-2"
                 onClick={() => props.onClick(entry.node.id)}
               >
-                <Entry entry={entry} />
+                <Entry
+                  entry={entry}
+                  onStartTimer={() => props.onStartTimer(entry.node.id)}
+                />
               </div>
             ))}
           </div>

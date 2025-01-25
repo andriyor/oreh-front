@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from "react";
 import { Handle, Position, useEdges } from "@xyflow/react";
 import { TimerApp } from "./Timer";
 import { TextNode } from "./types";
-
 export type TimeEntry = {
   time: number;
   startTime: string;
@@ -37,9 +36,7 @@ export function TextUpdaterNode(data: TextNode) {
   };
 
   const handleStop = (time: TimeEntry) => {
-    console.log("data.data", data);
     data.data.addTimeEntryToNode(data.id, time);
-    console.log("handleStop", data.id, time);
   };
 
   return (
@@ -71,6 +68,7 @@ export function TextUpdaterNode(data: TextNode) {
         </div>
         <div>
           <TimerApp
+            isRunning={data.data.isRunning}
             duration={data.data.commulativeDuration}
             onStop={handleStop}
           />
