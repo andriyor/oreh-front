@@ -28,6 +28,8 @@
 
 tech:
 - [ ] rect query 
+  - [x] use react query
+  - [x] update entries by pisemistic update
 
 
 

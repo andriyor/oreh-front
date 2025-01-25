@@ -18,6 +18,7 @@ import {
   QueryClient,
   QueryClientProvider,
   useMutation,
+  useQueryClient,
 } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
@@ -75,6 +76,7 @@ const AddNodeOnEdgeDrop = (props: {
   currentNodeId: string;
   runningNodeid: string;
 }) => {
+  const queryClient = useQueryClient();
   const [nodes, setNodes, onNodesChange] = useNodesState<AppNode>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 

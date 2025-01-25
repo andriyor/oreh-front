@@ -1,14 +1,15 @@
 import { format } from "date-fns";
 import { groupBy } from "lodash";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { EntryWithNode } from "../nodes/types";
 import { Entry } from "./Entry";
-import { useQuery } from "@tanstack/react-query";
 
 export const EntryList = (props: {
   onClick: (id: string) => void;
   onStartTimer: (nodeId: string) => void;
 }) => {
+  const queryClient = useQueryClient();
   const { data: entries } = useQuery<EntryWithNode[]>({
     queryKey: ["entry"],
     queryFn: async () => {
@@ -16,6 +17,19 @@ export const EntryList = (props: {
       return await response.json();
     },
   });
+
+
+  const entryDeleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      return await fetch(`http://localhost:3000/entry/${id}`, {
+        method: "DELETE"
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['entry'] })
+    }
+  });
+  
 
   const groupped = groupBy(entries, (entry) =>
     format(entry.startTime, "MM.dd")
@@ -35,6 +49,7 @@ export const EntryList = (props: {
               >
                 <Entry
                   entry={entry}
+                  onDelete={() => entryDeleteMutation.mutate(entry.id)}
                   onStartTimer={() => props.onStartTimer(entry.node.id)}
                 />
               </div>
