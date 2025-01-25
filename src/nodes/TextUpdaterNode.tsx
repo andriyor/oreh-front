@@ -18,7 +18,7 @@ function debounce(func: Function, delay: number) {
 }
 
 export function TextUpdaterNode(data: TextNode) {
-  const [inputValue, setInputValue] = useState(data.data.label || '');
+  const [inputValue, setInputValue] = useState(data.data.label || "");
 
   const handleDebouncedChange = useCallback(
     debounce((value: string) => {
@@ -30,7 +30,7 @@ export function TextUpdaterNode(data: TextNode) {
     []
   );
 
-  const handleChange = (event:  React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
     setInputValue(newValue);
     handleDebouncedChange(newValue);
@@ -43,7 +43,13 @@ export function TextUpdaterNode(data: TextNode) {
   };
 
   return (
-    <div style={{ padding: "10px", border: "solid" }}>
+    <div
+      style={{
+        padding: "10px",
+        border: "solid",
+        borderBlockColor: data.data.hightlight ? "red" : "black",
+      }}
+    >
       <Handle type="target" position={Position.Left} />
       <div style={{ display: "flex" }}>
         <div style={{ marginRight: "10px" }}>
@@ -64,7 +70,10 @@ export function TextUpdaterNode(data: TextNode) {
           />
         </div>
         <div>
-          <TimerApp duration={data.data.commulativeDuration} onStop={handleStop} />
+          <TimerApp
+            duration={data.data.commulativeDuration}
+            onStop={handleStop}
+          />
         </div>
       </div>
 

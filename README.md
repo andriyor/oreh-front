@@ -17,8 +17,11 @@
   - [ ] calculate total based on month/week/day
   - [ ] checkbox  
 - [ ] time entry
-  - [x] edit time entries
-  - [ ] tags for time entries
+  - [x] edit
+  - [x] highlight in tree
+  - [ ] srart
+  - [ ] delete
+  - [ ] tags
 - [ ] dashboard
   - [ ] chart by node time
   - [ ] chart by tag time

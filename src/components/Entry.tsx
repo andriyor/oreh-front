@@ -22,11 +22,11 @@ export const Entry = ({ entry }: { entry: EntryWithNode }) => {
   return (
     <div>
       <div className="flex">
-        <div className="mr-5">Node: {entry.node.data.label}</div>
+        <div className="mr-5">Node label: {entry.node.data.label}</div>
         <div className="mr-5">
           <Time entry={localEntry} onUpdate={handleUpdate} />
         </div>
-        <div>{formatSeconds(localEntry.duration, "HH:mm:ss")}</div>
+        <div>{formatSeconds(localEntry.duration)}</div>
       </div>
     </div>
   );

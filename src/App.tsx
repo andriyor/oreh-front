@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   ReactFlow,
   Background,
@@ -67,7 +67,7 @@ const getLayoutedElements = (nodes, edges, direction = "TB") => {
 let id = 1;
 const getId = () => `${id++}`;
 
-const AddNodeOnEdgeDrop = () => {
+const AddNodeOnEdgeDrop = (props: { currentNodeId: string }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState<AppNode>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
@@ -95,6 +95,17 @@ const AddNodeOnEdgeDrop = () => {
   useEffect(() => {
     fetchGraph();
   }, []);
+
+  useEffect(() => {
+    setNodes((nds) =>
+      nds.map((node) => {
+        return {
+          ...node,
+          data: { ...node.data, hightlight: node.id === props.currentNodeId },
+        };
+      })
+    );
+  }, [props.currentNodeId]);
 
   const { screenToFlowPosition } = useReactFlow();
 
@@ -223,13 +234,18 @@ const AddNodeOnEdgeDrop = () => {
   );
 };
 
-export default () => (
-  <div style={{height: '100%'}}>
-    <div style={{ height: "60%" }}>
-      <ReactFlowProvider>
-        <AddNodeOnEdgeDrop />
-      </ReactFlowProvider>
+const Wrapper = () => {
+  const [nodeid, setNodeId] = useState("");
+  return (
+    <div style={{ height: "100%" }}>
+      <div style={{ height: "60%" }}>
+        <ReactFlowProvider>
+          <AddNodeOnEdgeDrop currentNodeId={nodeid} />
+        </ReactFlowProvider>
+      </div>
+      <EntryList onClick={(id) => setNodeId(id)} />
     </div>
-    <EntryList />
-  </div>
-);
+  );
+};
+
+export default () => <Wrapper />;

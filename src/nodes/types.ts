@@ -1,4 +1,4 @@
-import type { Node, BuiltInNode } from "@xyflow/react";
+import type { Node } from "@xyflow/react";
 import { TimeEntry } from "./TextUpdaterNode";
 
 export type Entry = {
@@ -34,6 +34,7 @@ export type NodeData = {
   label?: string;
   time?: number;
   entry: Entry;
+  hightlight?: boolean;
   parentId: string;
   commulativeDuration: number;
   totalTimeEntriersDuration: number;
@@ -41,6 +42,6 @@ export type NodeData = {
   updateNodeData: (nodeId: string, nodeData: NodeData) => void;
 };
 
-export type PositionLoggerNode = Node<{ label: string }, "position-logger">;
+
 export type TextNode = Node<NodeData, "text-node">;
-export type AppNode = BuiltInNode | PositionLoggerNode | TextNode;
+export type AppNode = TextNode;
