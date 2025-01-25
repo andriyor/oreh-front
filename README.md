@@ -3,20 +3,25 @@
 ## TODO
 
 
-- [x] render tree view
-- [x] text input for node
-- [x] add node
-- [x] delete node
-- [x] track time node
-- [x] show total time for node
-- [ ] show time entries of node
-- [ ] edit time entries
-- [ ] tags for time entries
-- [ ] calculate total based on month/week/day
-- [ ] checkbox  
-- [ ] chart by node time
-- [ ] chart by tag time
-- [ ] show/expand node
+
+
+- [ ] graph
+  - [x] render tree view
+  - [x] text input for node
+  - [x] add node
+  - [x] delete node
+  - [x] track time node
+  - [x] show total time for node
+  - [x] show time entries of node
+  - [ ] show/expand node
+  - [ ] calculate total based on month/week/day
+  - [ ] checkbox  
+- [ ] time entry
+  - [x] edit time entries
+  - [ ] tags for time entries
+- [ ] dashboard
+  - [ ] chart by node time
+  - [ ] chart by tag time
 
 
 

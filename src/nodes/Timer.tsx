@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import Stop from "../icons/stop-solid.svg";
 import Play from "../icons/play-solid.svg";
+import { formatSeconds } from "../helpers";
 
 export const TimerApp = ({
   duration,
@@ -58,8 +59,8 @@ export const TimerApp = ({
           </button>
         )}
       </div>
-      <div className="mr-2">T: {totalTime}</div>
-      {isRunning && <div>C: {timeElapsed}</div>}
+      <div className="mr-2">{formatSeconds(totalTime)}</div>
+      {isRunning && <div>C: {formatSeconds(timeElapsed)}</div>}
     </div>
   );
 };

@@ -24,6 +24,12 @@ export type EntryWithNode = {
   node: BaseNode;
 };
 
+export type EntryDatesWithNode = {
+  duration: number;
+  startTime: Date;
+  stopTime: Date;
+};
+
 export type NodeData = {
   label?: string;
   time?: number;
