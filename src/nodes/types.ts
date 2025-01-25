@@ -40,7 +40,6 @@ export type NodeData = {
   entry: Entry;
   hightlight?: boolean;
   isRunning?: boolean;
-  parentId: string;
   commulativeDuration: number;
   totalTimeEntriersDuration: number;
   addTimeEntryToNode: (time: EntryToCreate) => void;

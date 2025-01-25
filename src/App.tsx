@@ -13,21 +13,21 @@ import {
   Position,
   Edge,
 } from "@xyflow/react";
-
-import "@xyflow/react/dist/style.css";
-
-import { nodeTypes } from "./nodes";
-import { edgeTypes } from "./edges";
-
 import dagre from "@dagrejs/dagre";
-import { AppNode, Entry, EntryToCreate, NodeData } from "./nodes/types";
-import { EntryList } from "./components/EntryList";
 import {
   QueryClient,
   QueryClientProvider,
   useMutation,
 } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
+import "@xyflow/react/dist/style.css";
+
+import { nodeTypes } from "./nodes";
+import { edgeTypes } from "./edges";
+
+import { AppNode, Entry, EntryToCreate, NodeData } from "./nodes/types";
+import { EntryList } from "./components/EntryList";
 
 const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
 
@@ -179,7 +179,6 @@ const AddNodeOnEdgeDrop = (props: {
 
   const onConnectEnd = useCallback(
     (event, connectionState) => {
-      console.log("connectionState.fromNode", connectionState.fromNode);
       // when a connection is dropped on the pane it's not valid
       if (!connectionState.isValid) {
         // we need to remove the wrapper bounds, in order to get the correct position
