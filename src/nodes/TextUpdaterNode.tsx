@@ -1,6 +1,7 @@
-import { ChangeEvent, useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { Handle, Position } from "@xyflow/react";
 import { Timer, TimerApp } from "./Timer";
+import DotsIcon from "../icons/ellipsis-v-solid.svg";
 import { TextNode } from "./types";
 import MinusIcon from "../icons/minus-solid.svg";
 import PlusIcon from "../icons/plus-solid.svg";
@@ -87,6 +88,13 @@ export function TextUpdaterNode(props: TextNode) {
             onStop={handleStop}
           />
         </div>
+
+        <div className="mr-3">
+          <button onClick={() => props.data.showChart(props)}>
+            <img src={DotsIcon} height="15px" />
+          </button>
+        </div>
+
         {props.data.isCollapsed ? (
           <button onClick={() => props.data.toggleExpand(props)}>
             <img src={PlusIcon} height="15px" />
@@ -96,7 +104,6 @@ export function TextUpdaterNode(props: TextNode) {
             <img src={MinusIcon} height="15px" />
           </button>
         )}
-        <div>{props.data.isCollapsed}</div>
       </div>
 
       <Handle type="source" position={Position.Right} />

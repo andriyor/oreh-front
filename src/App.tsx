@@ -38,6 +38,7 @@ import {
 import { EntryList } from "./components/EntryList";
 import { useMediaQuery } from "usehooks-ts";
 import { GraphApi } from "./api";
+import { VictoryPie, VictoryTheme } from "victory";
 
 const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
 
@@ -84,7 +85,7 @@ const getId = () => `${id++}`;
 const getOutgoersNested = (
   node: TextNode,
   nodes: TextNode[],
-  edges: Edge[]
+  edges: Edge[],
 ): TextNode[] => {
   const out = getOutgoers(node, nodes, edges);
   return [...out, ...out.flatMap((n) => getOutgoersNested(n, nodes, edges))];
@@ -93,6 +94,7 @@ const getOutgoersNested = (
 const AddNodeOnEdgeDrop = (props: {
   currentNodeId: string;
   runningNodeid: string;
+  onShowChart: (data: ChartData[]) => void;
 }) => {
   const queryClient = useQueryClient();
   const [nodes, setNodes, onNodesChange] = useNodesState<AppNode>([]);
@@ -111,7 +113,7 @@ const AddNodeOnEdgeDrop = (props: {
               };
             }),
             json.edges,
-            "LR"
+            "LR",
           );
         setNodes(layoutedNodes);
         setEdges(layoutedEdges);
@@ -133,7 +135,7 @@ const AddNodeOnEdgeDrop = (props: {
             isRunning: node.id === props.runningNodeid,
           },
         };
-      })
+      }),
     );
   }, [props.currentNodeId]);
 
@@ -144,18 +146,16 @@ const AddNodeOnEdgeDrop = (props: {
       setEdges((eds) =>
         addEdge(
           { ...params, type: ConnectionLineType.SmoothStep, animated: true },
-          eds
-        )
+          eds,
+        ),
       ),
-    []
+    [],
   );
 
   const nodeDeleteMutation = useMutation({
     mutationFn: async (nodes: AppNode[]) => {
       const firstNode = nodes[0];
-      return await GraphApi.url(
-        `/node/${firstNode.id}`
-      ).delete().res();
+      return await GraphApi.url(`/node/${firstNode.id}`).delete().res();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["entry"] });
@@ -166,12 +166,12 @@ const AddNodeOnEdgeDrop = (props: {
   const updateNodeDataMutation = useMutation({
     mutationFn: async (nodeData: NodeDataToUpdate) => {
       const { label, isChecked } = nodeData;
-      return await GraphApi.url(
-        `/node/${nodeData.nodeIdToUpdate}`
-      ).patch({
-        label,
-        isChecked,
-      }).json();
+      return await GraphApi.url(`/node/${nodeData.nodeIdToUpdate}`)
+        .patch({
+          label,
+          isChecked,
+        })
+        .json();
     },
     onSuccess: () => {
       // TODO: update only label changed
@@ -182,18 +182,33 @@ const AddNodeOnEdgeDrop = (props: {
 
   const entryMutation = useMutation({
     mutationFn: async (entry: EntryToCreate) => {
-      return await GraphApi.url("/entry").post({
-        nodeId: entry.nodeId,
-        duration: entry.duration,
-        startTime: entry.startTime,
-        stopTime: entry.stopTime,
-      }).json();
+      return await GraphApi.url("/entry")
+        .post({
+          nodeId: entry.nodeId,
+          duration: entry.duration,
+          startTime: entry.startTime,
+          stopTime: entry.stopTime,
+        })
+        .json();
     },
     onSuccess: (data) => {
       queryClient.setQueryData(["entry"], (old: Entry[]) => [data, ...old]);
       fetchGraph();
     },
   });
+
+  const showChart = (node: TextNode) => {
+    const out = getOutgoers(node, nodes, edges);
+    console.log("out", out);
+    const chartData: ChartData[] = out.map((n) => {
+      return {
+        x: n.data.label || "",
+        y: n.data.totalTimeEntriersDuration,
+      };
+    });
+    console.log("chartData", chartData);
+    props.onShowChart(chartData);
+  };
 
   const hidden = useRef<string[]>([]);
   const isCollapsed = useRef<string[]>([]);
@@ -204,12 +219,12 @@ const AddNodeOnEdgeDrop = (props: {
     const outgoerNodeIds = outgoerNodes.map((n) => n.id);
     // filter in case click on same node
     const withoutAlreadyHidden = outgoerNodeIds.filter(
-      (id) => !hidden.current.includes(id)
+      (id) => !hidden.current.includes(id),
     );
 
     // filter already hidden in other three
     const withoutHiddenIds = hidden.current.filter(
-      (id) => !outgoerNodeIds.includes(id)
+      (id) => !outgoerNodeIds.includes(id),
     );
 
     hidden.current = [...withoutHiddenIds, ...withoutAlreadyHidden];
@@ -232,7 +247,7 @@ const AddNodeOnEdgeDrop = (props: {
           },
           hidden: hidden.current.includes(node.id),
         };
-      })
+      }),
     );
   };
 
@@ -243,6 +258,7 @@ const AddNodeOnEdgeDrop = (props: {
         ...node.data,
         updateNodeData: updateNodeDataMutation.mutate,
         toggleExpand,
+        showChart,
         addTimeEntryToNode: entryMutation.mutate,
       },
     };
@@ -268,17 +284,19 @@ const AddNodeOnEdgeDrop = (props: {
           data: { label: `Node ${id}` },
         };
 
-        GraphApi.url(`/node/${connectionState.fromNode.id}`).post().res(() => {
-          fetchGraph();
-        });
+        GraphApi.url(`/node/${connectionState.fromNode.id}`)
+          .post()
+          .res(() => {
+            fetchGraph();
+          });
 
         setNodes((nds) => nds.concat(newNode));
         setEdges((eds) =>
-          eds.concat({ id, source: connectionState.fromNode.id, target: id })
+          eds.concat({ id, source: connectionState.fromNode.id, target: id }),
         );
       }
     },
-    [screenToFlowPosition]
+    [screenToFlowPosition],
   );
 
   return (
@@ -301,10 +319,16 @@ const AddNodeOnEdgeDrop = (props: {
   );
 };
 
+type ChartData = {
+  x: string;
+  y: number;
+};
+
 const Wrapper = () => {
   const [nodeid, setNodeId] = useState("");
   const [runningNodeid, setRunningNodeId] = useState("");
   const matches = useMediaQuery("(min-width: 1300px)");
+  const [chartData, setChartData] = useState<ChartData[]>([]);
 
   return (
     <div style={{ height: "100%", display: matches ? "flex" : "block" }}>
@@ -312,15 +336,24 @@ const Wrapper = () => {
         <ReactFlowProvider>
           <AddNodeOnEdgeDrop
             currentNodeId={nodeid}
+            onShowChart={(chart) => setChartData(chart)}
             runningNodeid={runningNodeid}
           />
         </ReactFlowProvider>
       </div>
-      <div className="m-5" style={{ width: matches ? "50%" : "98%" }}>
-        <EntryList
-          onClick={(id) => setNodeId(id)}
-          onStartTimer={(id) => setRunningNodeId(id)}
-        />
+      <div className="flex m-5" style={{ width: matches ? "50%" : "98%" }}>
+        {Boolean(chartData.length) && (
+          <div style={{ height: "350px" }}>
+            <VictoryPie data={chartData} theme={VictoryTheme.clean} />
+          </div>
+        )}
+
+        <div className="flex-1">
+          <EntryList
+            onClick={(id) => setNodeId(id)}
+            onStartTimer={(id) => setRunningNodeId(id)}
+          />
+        </div>
       </div>
     </div>
   );

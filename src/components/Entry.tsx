@@ -2,7 +2,8 @@ import { useState } from "react";
 import { EntryDatesWithNode, EntryWithNode } from "../nodes/types";
 import { Time } from "./Time";
 import Play from "../icons/play-solid.svg";
-import Trash from "../icons/trash-solid.svg";
+import TrashIcon from "../icons/trash-solid.svg";
+import DotsIcon from "../icons/ellipsis-v-solid.svg";
 import { formatSeconds } from "../helpers";
 import { GraphApi } from "../api";
 
@@ -46,9 +47,15 @@ export const Entry = (props: {
           </button>
         </div>
 
-        <div>
+        <div className="mr-3">
           <button onClick={() => props.onDelete()}>
-            <img src={Trash} height="15px" />
+            <img src={TrashIcon} height="15px" />
+          </button>
+        </div>
+
+        <div>
+          <button>
+            <img src={DotsIcon} height="15px" />
           </button>
         </div>
       </div>

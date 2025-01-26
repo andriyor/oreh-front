@@ -70,7 +70,7 @@ export const TimerApp = (props: {
         )}
       </div>
       <div className="mr-2">{formatSeconds(totalTime)}</div>
-      {isRunning && <div>C: {formatSeconds(timeElapsed)}</div>}
+      {isRunning && <div className="mr-3">C: {formatSeconds(timeElapsed)}</div>}
     </div>
   );
 };

@@ -47,6 +47,7 @@ export type NodeData = {
   isRunning?: boolean;
   addTimeEntryToNode: (time: EntryToCreate) => void;
   toggleExpand: (nodeId: TextNode) => void;
+  showChart: (nodeId: TextNode) => void;
   updateNodeData: (nodeData: NodeDataToUpdate) => void;
 };
 
