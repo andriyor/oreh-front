@@ -26,6 +26,9 @@
 - [ ] dashboard
   - [ ] chart by node time
   - [ ] chart by tag time
+- [ ] layout
+  - [x] adaptive graph/time entries lise
+  - [ ] better style
 
 tech:
 

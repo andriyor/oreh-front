@@ -40,11 +40,11 @@ export const EntryList = (props: {
       {Object.keys(groupped).map((day) => {
         return (
           <div key={day}>
-            <div className="mb-2">Day: {day}</div>
+            <div className="mb-3">Day: {day}</div>
             {groupped[day].map((entry) => (
               <div
                 key={entry.id}
-                className="mb-2"
+                className="mb-3"
                 onClick={() => props.onClick(entry.node.id)}
               >
                 <Entry

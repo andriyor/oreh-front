@@ -36,6 +36,7 @@ import {
   TextNode,
 } from "./nodes/types";
 import { EntryList } from "./components/EntryList";
+import { useMediaQuery } from "usehooks-ts";
 
 const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
 
@@ -303,9 +304,11 @@ const AddNodeOnEdgeDrop = (props: {
 const Wrapper = () => {
   const [nodeid, setNodeId] = useState("");
   const [runningNodeid, setRunningNodeId] = useState("");
+  const matches = useMediaQuery("(min-width: 1300px)");
+
   return (
-    <div style={{ height: "100%" }}>
-      <div style={{ height: "60%" }}>
+    <div style={{ height: "100%", display: matches ? "flex" : "block" }}>
+      <div style={{ height: "60%", width: matches ? "50%" : "98%" }}>
         <ReactFlowProvider>
           <AddNodeOnEdgeDrop
             currentNodeId={nodeid}
@@ -313,10 +316,12 @@ const Wrapper = () => {
           />
         </ReactFlowProvider>
       </div>
-      <EntryList
-        onClick={(id) => setNodeId(id)}
-        onStartTimer={(id) => setRunningNodeId(id)}
-      />
+      <div className="m-5" style={{width: matches ? "50%" : "98%"}}>
+        <EntryList
+          onClick={(id) => setNodeId(id)}
+          onStartTimer={(id) => setRunningNodeId(id)}
+        />
+      </div>
     </div>
   );
 };

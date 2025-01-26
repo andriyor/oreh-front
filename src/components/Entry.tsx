@@ -25,18 +25,25 @@ export const Entry = (props: {
   };
 
   return (
-    <div>
-      <div className="flex">
-        <div className="mr-3">Node label: {props.entry.node.data.label}</div>
+    <div className="flex flex-row" style={{borderBottomColor: 'grey', borderBottomStyle: 'solid', borderBottomWidth: '1px'}}>
+      <div className="basis-6/12 mr-3">
+        Node label: {props.entry.node.data.label}
+      </div>
+
+      <div className="flex basis-5/12 justify-end">
         <div className="mr-3">
           <Time entry={localEntry} onUpdate={handleUpdate} />
         </div>
         <div className="mr-3">{formatSeconds(localEntry.duration)}</div>
+      </div>
+
+      <div className="flex basis-1/12 justify-end mr-3 mb-2">
         <div className="mr-3">
           <button onClick={() => props.onStartTimer()}>
             <img src={Play} height="15px" />
           </button>
         </div>
+
         <div>
           <button onClick={() => props.onDelete()}>
             <img src={Trash} height="15px" />

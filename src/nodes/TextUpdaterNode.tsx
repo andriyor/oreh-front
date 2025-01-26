@@ -19,13 +19,13 @@ function debounce(func: Function, delay: number) {
   };
 }
 
-export function TextUpdaterNode(data: TextNode) {
-  const [inputValue, setInputValue] = useState(data.data.label || "");
+export function TextUpdaterNode(props: TextNode) {
+  const [inputValue, setInputValue] = useState(props.data.label || "");
 
   const handleDebouncedChange = useCallback(
     debounce((value: string) => {
-      data.data.updateNodeData(data.id, {
-        ...data.data,
+      props.data.updateNodeData(props.id, {
+        ...props.data,
         label: value,
       });
     }, 500),
@@ -39,7 +39,7 @@ export function TextUpdaterNode(data: TextNode) {
   };
 
   const handleStop = (time: Timer) => {
-    data.data.addTimeEntryToNode({...time, nodeId: data.id });
+    props.data.addTimeEntryToNode({ ...time, nodeId: props.id });
   };
 
   return (
@@ -47,7 +47,7 @@ export function TextUpdaterNode(data: TextNode) {
       style={{
         padding: "10px",
         border: "solid",
-        borderBlockColor: data.data.hightlight ? "red" : "black",
+        borderBlockColor: props.data.hightlight ? "red" : "black",
       }}
     >
       <Handle type="target" position={Position.Left} />
@@ -71,23 +71,21 @@ export function TextUpdaterNode(data: TextNode) {
         </div>
         <div>
           <TimerApp
-            isRunning={data.data.isRunning}
-            duration={data.data.commulativeDuration}
+            isRunning={props.data.isRunning}
+            duration={props.data.commulativeDuration}
             onStop={handleStop}
           />
         </div>
-        {data.data.isCollapsed ? (
-          <button onClick={() => data.data.toggleExpand(data)}>
+        {props.data.isCollapsed ? (
+          <button onClick={() => props.data.toggleExpand(props)}>
             <img src={PlusIcon} height="15px" />
           </button>
         ) : (
-          <button onClick={() => data.data.toggleExpand(data)}>
+          <button onClick={() => props.data.toggleExpand(props)}>
             <img src={MinusIcon} height="15px" />
           </button>
         )}
-        <div>
-          {data.data.isCollapsed}
-        </div>
+        <div>{props.data.isCollapsed}</div>
       </div>
 
       <Handle type="source" position={Position.Right} />
