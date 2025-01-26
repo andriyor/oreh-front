@@ -1,4 +1,5 @@
 import { useState } from "react";
+import wretch from "wretch";
 import { EntryDatesWithNode, EntryWithNode } from "../nodes/types";
 import { Time } from "./Time";
 import Play from "../icons/play-solid.svg";
@@ -13,15 +14,9 @@ export const Entry = (props: {
   const [localEntry, setLocalEntry] = useState(props.entry);
 
   const handleUpdate = (entry: EntryDatesWithNode) => {
-    fetch(`http://127.0.0.1:3000/entry/${localEntry.id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(entry),
-    })
-      .then((res) => res.json())
-      .then((json) => setLocalEntry(json));
+    wretch(`http://127.0.0.1:3000/entry/${localEntry.id}`)
+      .put(entry)
+      .json((json) => setLocalEntry(json));
   };
 
   return (

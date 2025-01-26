@@ -35,7 +35,7 @@ tech:
 - [ ] rect query
   - [x] use react query
   - [x] update entries by pisemistic update
-  - [ ] use fetch wrapper
+  - [x] use fetch wrapper
 
 ![](https://github.com/xyflow/web/blob/main/assets/codesandbox-header-ts.png?raw=true)
 

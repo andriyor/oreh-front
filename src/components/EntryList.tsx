@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import wretch from "wretch";
 import { groupBy } from "lodash";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -13,23 +14,18 @@ export const EntryList = (props: {
   const { data: entries } = useQuery<EntryWithNode[]>({
     queryKey: ["entry"],
     queryFn: async () => {
-      const response = await fetch("http://localhost:3000/entry");
-      return await response.json();
+      return await wretch("http://localhost:3000/entry").get().json();
     },
   });
-
 
   const entryDeleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      return await fetch(`http://localhost:3000/entry/${id}`, {
-        method: "DELETE"
-      });
+      return await wretch(`http://localhost:3000/entry/${id}`).delete().res();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['entry'] })
-    }
+      queryClient.invalidateQueries({ queryKey: ["entry"] });
+    },
   });
-  
 
   const groupped = groupBy(entries, (entry) =>
     format(entry.startTime, "MM.dd")

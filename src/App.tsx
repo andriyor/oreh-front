@@ -14,6 +14,7 @@ import {
   Edge,
   getOutgoers,
 } from "@xyflow/react";
+import wretch from "wretch";
 import dagre from "@dagrejs/dagre";
 import {
   QueryClient,
@@ -98,10 +99,9 @@ const AddNodeOnEdgeDrop = (props: {
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
   const fetchGraph = () => {
-    fetch("http://localhost:3000/graph")
-      .then((response) => response.json())
-      .then((json) => {
-        console.log("json", json);
+    wretch("http://localhost:3000/graph")
+      .get()
+      .json((json) => {
         const { nodes: layoutedNodes, edges: layoutedEdges } =
           getLayoutedElements(
             json.nodes.map((node) => {
@@ -153,12 +153,9 @@ const AddNodeOnEdgeDrop = (props: {
   const nodeDeleteMutation = useMutation({
     mutationFn: async (nodes: AppNode[]) => {
       const firstNode = nodes[0];
-      return await fetch(
-        `http://localhost:3000/node/${firstNode.id}`,
-        {
-          method: "DELETE",
-        }
-      );
+      return await wretch(
+        `http://localhost:3000/node/${firstNode.id}`
+      ).delete().res();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["entry"] });
@@ -169,20 +166,12 @@ const AddNodeOnEdgeDrop = (props: {
   const updateNodeDataMutation = useMutation({
     mutationFn: async (nodeData: NodeDataToUpdate) => {
       const { label, isChecked } = nodeData;
-      const response = await fetch(
-        `http://localhost:3000/node/${nodeData.nodeIdToUpdate}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            label,
-            isChecked,
-          }),
-        }
-      );
-      return await response.json();
+      return await wretch(
+        `http://localhost:3000/node/${nodeData.nodeIdToUpdate}`
+      ).patch({
+        label,
+        isChecked,
+      }).json();
     },
     onSuccess: () => {
       // TODO: update only label changed
@@ -193,19 +182,12 @@ const AddNodeOnEdgeDrop = (props: {
 
   const entryMutation = useMutation({
     mutationFn: async (entry: EntryToCreate) => {
-      const response = await fetch("http://localhost:3000/entry", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          nodeId: entry.nodeId,
-          duration: entry.duration,
-          startTime: entry.startTime,
-          stopTime: entry.stopTime,
-        }),
-      });
-      return await response.json();
+      return await wretch("http://localhost:3000/entry").post({
+        nodeId: entry.nodeId,
+        duration: entry.duration,
+        startTime: entry.startTime,
+        stopTime: entry.stopTime,
+      }).json();
     },
     onSuccess: (data) => {
       queryClient.setQueryData(["entry"], (old: Entry[]) => [data, ...old]);
@@ -286,9 +268,7 @@ const AddNodeOnEdgeDrop = (props: {
           data: { label: `Node ${id}` },
         };
 
-        fetch(`http://localhost:3000/node/${connectionState.fromNode.id}`, {
-          method: "POST",
-        }).then(() => {
+        wretch(`http://localhost:3000/node/${connectionState.fromNode.id}`).post().res(() => {
           fetchGraph();
         });
 
