@@ -13,7 +13,8 @@
   - [x] track time node
   - [x] show total time for node
   - [x] show time entries of node
-  - [ ] show/expand node
+  - [x] show/expand node
+  - [ ] show/expand node button
   - [ ] calculate total based on month/week/day
   - [ ] checkbox  
 - [ ] time entry

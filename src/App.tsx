@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ReactFlow,
   Background,
@@ -12,6 +12,7 @@ import {
   ReactFlowProvider,
   Position,
   Edge,
+  getOutgoers,
 } from "@xyflow/react";
 import dagre from "@dagrejs/dagre";
 import {
@@ -27,7 +28,13 @@ import "@xyflow/react/dist/style.css";
 import { nodeTypes } from "./nodes";
 import { edgeTypes } from "./edges";
 
-import { AppNode, Entry, EntryToCreate, NodeData } from "./nodes/types";
+import {
+  AppNode,
+  Entry,
+  EntryToCreate,
+  NodeData,
+  TextNode,
+} from "./nodes/types";
 import { EntryList } from "./components/EntryList";
 
 const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
@@ -71,6 +78,15 @@ const getLayoutedElements = (nodes, edges, direction = "TB") => {
 
 let id = 1;
 const getId = () => `${id++}`;
+
+const getOutgoersNested = (
+  node: TextNode,
+  nodes: TextNode[],
+  edges: Edge[]
+): TextNode[] => {
+  const out = getOutgoers(node, nodes, edges);
+  return [...out, ...out.flatMap((n) => getOutgoersNested(n, nodes, edges))];
+};
 
 const AddNodeOnEdgeDrop = (props: {
   currentNodeId: string;
@@ -163,7 +179,7 @@ const AddNodeOnEdgeDrop = (props: {
       return await respone.json();
     },
     onSuccess: (data) => {
-      queryClient.setQueryData(['entry'], (old: Entry[]) => [data, ...old]);
+      queryClient.setQueryData(["entry"], (old: Entry[]) => [data, ...old]);
       fetchGraph();
     },
   });
@@ -222,6 +238,34 @@ const AddNodeOnEdgeDrop = (props: {
     });
   };
 
+  const hidden = useRef<string[]>([]);
+
+  const nodeClick = (_: unknown, node: TextNode) => {
+    const outgoerNodes = getOutgoersNested(node, nodes, edges);
+
+    const outgoerNodeIds = outgoerNodes.map((n) => n.id);
+    // filter in case click on same node
+    const withoutAlreadyHidden = outgoerNodeIds.filter(
+      (id) => !hidden.current.includes(id)
+    );
+
+    // filter already hidden in other three
+    const withoutHiddenIds = hidden.current.filter(
+      (id) => !outgoerNodeIds.includes(id)
+    );
+
+    hidden.current = [...withoutHiddenIds, ...withoutAlreadyHidden];
+
+    setNodes((nds) =>
+      nds.map((node) => {
+        return {
+          ...node,
+          hidden: hidden.current.includes(node.id),
+        };
+      })
+    );
+  };
+
   return (
     <ReactFlow
       nodes={augmentedNodes}
@@ -233,6 +277,7 @@ const AddNodeOnEdgeDrop = (props: {
       onConnect={onConnect}
       onNodesDelete={onNodesDelete}
       onConnectEnd={onConnectEnd}
+      onNodeClick={nodeClick}
       fitView
     >
       <Background />
