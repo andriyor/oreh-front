@@ -150,29 +150,50 @@ const AddNodeOnEdgeDrop = (props: {
     []
   );
 
+  const nodeDeleteMutation = useMutation({
+    mutationFn: async (nodes: AppNode[]) => {
+      const firstNode = nodes[0];
+      return await fetch(
+        `http://localhost:3000/node/${firstNode.id}`,
+        {
+          method: "DELETE",
+        }
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["entry"] });
+      // fetchGraph();
+    },
+  });
+
   const updateNodeDataMutation = useMutation({
     mutationFn: async (nodeData: NodeDataToUpdate) => {
       const { label, isChecked } = nodeData;
-      const respone = await fetch(`http://localhost:3000/node/${nodeData.nodeIdToUpdate}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          label,
-          isChecked,
-        }),
-      })
-      return await respone.json();
+      const response = await fetch(
+        `http://localhost:3000/node/${nodeData.nodeIdToUpdate}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            label,
+            isChecked,
+          }),
+        }
+      );
+      return await response.json();
     },
     onSuccess: () => {
+      // TODO: update only label changed
+      queryClient.invalidateQueries({ queryKey: ["entry"] });
       // fetchGraph();
     },
   });
 
   const entryMutation = useMutation({
     mutationFn: async (entry: EntryToCreate) => {
-      const respone = await fetch("http://localhost:3000/entry", {
+      const response = await fetch("http://localhost:3000/entry", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -184,7 +205,7 @@ const AddNodeOnEdgeDrop = (props: {
           stopTime: entry.stopTime,
         }),
       });
-      return await respone.json();
+      return await response.json();
     },
     onSuccess: (data) => {
       queryClient.setQueryData(["entry"], (old: Entry[]) => [data, ...old]);
@@ -280,14 +301,6 @@ const AddNodeOnEdgeDrop = (props: {
     [screenToFlowPosition]
   );
 
-  const onNodesDelete = (nodes: AppNode[]) => {
-    nodes.forEach((node) => {
-      fetch(`http://localhost:3000/node/${node.id}`, {
-        method: "DELETE",
-      });
-    });
-  };
-
   return (
     <ReactFlow
       nodes={augmentedNodes}
@@ -297,7 +310,7 @@ const AddNodeOnEdgeDrop = (props: {
       edgeTypes={edgeTypes}
       onEdgesChange={onEdgesChange}
       onConnect={onConnect}
-      onNodesDelete={onNodesDelete}
+      onNodesDelete={nodeDeleteMutation.mutate}
       onConnectEnd={onConnectEnd}
       fitView
     >
