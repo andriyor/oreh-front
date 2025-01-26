@@ -16,7 +16,7 @@
     - [ ] hide show/expand button when no children
     - [ ] show/expand by nesting level?
   - [ ] calculate total based on month/week/day
-  - [ ] checkbox
+  - [x] checkbox
 - [ ] time entry
   - [x] edit
   - [x] highlight in tree
@@ -35,6 +35,7 @@ tech:
 - [ ] rect query
   - [x] use react query
   - [x] update entries by pisemistic update
+  - [ ] use fetch wrapper
 
 ![](https://github.com/xyflow/web/blob/main/assets/codesandbox-header-ts.png?raw=true)
 

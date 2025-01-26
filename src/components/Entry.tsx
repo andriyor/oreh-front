@@ -25,7 +25,14 @@ export const Entry = (props: {
   };
 
   return (
-    <div className="flex flex-row" style={{borderBottomColor: 'grey', borderBottomStyle: 'solid', borderBottomWidth: '1px'}}>
+    <div
+      className="flex flex-row"
+      style={{
+        borderBottomColor: "grey",
+        borderBottomStyle: "solid",
+        borderBottomWidth: "1px",
+      }}
+    >
       <div className="basis-6/12 mr-3">
         Node label: {props.entry.node.data.label}
       </div>

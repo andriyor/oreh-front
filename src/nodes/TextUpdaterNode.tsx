@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { ChangeEvent, useCallback, useState } from "react";
 import { Handle, Position } from "@xyflow/react";
 import { Timer, TimerApp } from "./Timer";
 import { TextNode } from "./types";
@@ -24,7 +24,8 @@ export function TextUpdaterNode(props: TextNode) {
 
   const handleDebouncedChange = useCallback(
     debounce((value: string) => {
-      props.data.updateNodeData(props.id, {
+      props.data.updateNodeData({
+        nodeIdToUpdate: props.id,
         ...props.data,
         label: value,
       });
@@ -42,6 +43,14 @@ export function TextUpdaterNode(props: TextNode) {
     props.data.addTimeEntryToNode({ ...time, nodeId: props.id });
   };
 
+  const onCheckboxChange = (value: boolean) => {
+    props.data.updateNodeData({
+      nodeIdToUpdate: props.id,
+      ...props.data,
+      isChecked: value,
+    });
+  };
+
   return (
     <div
       style={{
@@ -57,7 +66,9 @@ export function TextUpdaterNode(props: TextNode) {
             id="checkbox"
             type="checkbox"
             name="checkbox"
+            defaultChecked={props.data.isChecked}
             className="nodrag"
+            onChange={(e) => onCheckboxChange(e.target.checked)}
           />
         </div>
         <div style={{ marginRight: "10px" }}>

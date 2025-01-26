@@ -33,18 +33,27 @@ export type EntryDatesWithNode = {
 };
 
 export type NodeData = {
+  // stored properties
   label?: string;
   time?: number;
   entry: Entry;
-  hightlight?: boolean;
-  isRunning?: boolean;
-  isCollapsed?: boolean;
+  isChecked?: boolean;
+  // not stored properties
   commulativeDuration: number;
   totalTimeEntriersDuration: number;
+  // runtime properties
+  hightlight?: boolean;
+  isCollapsed?: boolean;
+  isRunning?: boolean;
   addTimeEntryToNode: (time: EntryToCreate) => void;
   toggleExpand: (nodeId: TextNode) => void;
-  updateNodeData: (nodeId: string, nodeData: NodeData) => void;
+  updateNodeData: (nodeData: NodeDataToUpdate) => void;
 };
+
+export type NodeDataToUpdate = NodeData & {
+  nodeIdToUpdate: string
+}
+
 
 export type TextNode = Node<NodeData, "text-node">;
 export type AppNode = TextNode;

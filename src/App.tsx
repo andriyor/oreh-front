@@ -32,7 +32,7 @@ import {
   AppNode,
   Entry,
   EntryToCreate,
-  NodeData,
+  NodeDataToUpdate,
   TextNode,
 } from "./nodes/types";
 import { EntryList } from "./components/EntryList";
@@ -150,18 +150,25 @@ const AddNodeOnEdgeDrop = (props: {
     []
   );
 
-  const updateNodeData = (nodeId: string, nodeData: NodeData) => {
-    const { label } = nodeData;
-    fetch(`http://localhost:3000/node/${nodeId}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        label,
-      }),
-    }).then(() => {});
-  };
+  const updateNodeDataMutation = useMutation({
+    mutationFn: async (nodeData: NodeDataToUpdate) => {
+      const { label, isChecked } = nodeData;
+      const respone = await fetch(`http://localhost:3000/node/${nodeData.nodeIdToUpdate}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          label,
+          isChecked,
+        }),
+      })
+      return await respone.json();
+    },
+    onSuccess: () => {
+      // fetchGraph();
+    },
+  });
 
   const entryMutation = useMutation({
     mutationFn: async (entry: EntryToCreate) => {
@@ -231,7 +238,7 @@ const AddNodeOnEdgeDrop = (props: {
       ...node,
       data: {
         ...node.data,
-        updateNodeData,
+        updateNodeData: updateNodeDataMutation.mutate,
         toggleExpand,
         addTimeEntryToNode: entryMutation.mutate,
       },
@@ -316,7 +323,7 @@ const Wrapper = () => {
           />
         </ReactFlowProvider>
       </div>
-      <div className="m-5" style={{width: matches ? "50%" : "98%"}}>
+      <div className="m-5" style={{ width: matches ? "50%" : "98%" }}>
         <EntryList
           onClick={(id) => setNodeId(id)}
           onStartTimer={(id) => setRunningNodeId(id)}
