@@ -1,10 +1,10 @@
 import { useState } from "react";
-import wretch from "wretch";
 import { EntryDatesWithNode, EntryWithNode } from "../nodes/types";
 import { Time } from "./Time";
 import Play from "../icons/play-solid.svg";
 import Trash from "../icons/trash-solid.svg";
 import { formatSeconds } from "../helpers";
+import { GraphApi } from "../api";
 
 export const Entry = (props: {
   entry: EntryWithNode;
@@ -14,7 +14,7 @@ export const Entry = (props: {
   const [localEntry, setLocalEntry] = useState(props.entry);
 
   const handleUpdate = (entry: EntryDatesWithNode) => {
-    wretch(`http://127.0.0.1:3000/entry/${localEntry.id}`)
+    GraphApi.url(`/entry/${localEntry.id}`)
       .put(entry)
       .json((json) => setLocalEntry(json));
   };

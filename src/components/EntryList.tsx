@@ -1,10 +1,10 @@
 import { format } from "date-fns";
-import wretch from "wretch";
 import { groupBy } from "lodash";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { EntryWithNode } from "../nodes/types";
 import { Entry } from "./Entry";
+import { GraphApi } from "../api";
 
 export const EntryList = (props: {
   onClick: (id: string) => void;
@@ -14,13 +14,13 @@ export const EntryList = (props: {
   const { data: entries } = useQuery<EntryWithNode[]>({
     queryKey: ["entry"],
     queryFn: async () => {
-      return await wretch("http://localhost:3000/entry").get().json();
+      return await GraphApi.url("/entry").get().json();
     },
   });
 
   const entryDeleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      return await wretch(`http://localhost:3000/entry/${id}`).delete().res();
+      return await GraphApi.url(`/entry/${id}`).delete().res();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["entry"] });

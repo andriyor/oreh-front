@@ -14,7 +14,6 @@ import {
   Edge,
   getOutgoers,
 } from "@xyflow/react";
-import wretch from "wretch";
 import dagre from "@dagrejs/dagre";
 import {
   QueryClient,
@@ -38,6 +37,7 @@ import {
 } from "./nodes/types";
 import { EntryList } from "./components/EntryList";
 import { useMediaQuery } from "usehooks-ts";
+import { GraphApi } from "./api";
 
 const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
 
@@ -99,7 +99,7 @@ const AddNodeOnEdgeDrop = (props: {
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
   const fetchGraph = () => {
-    wretch("http://localhost:3000/graph")
+    GraphApi.url("/graph")
       .get()
       .json((json) => {
         const { nodes: layoutedNodes, edges: layoutedEdges } =
@@ -153,8 +153,8 @@ const AddNodeOnEdgeDrop = (props: {
   const nodeDeleteMutation = useMutation({
     mutationFn: async (nodes: AppNode[]) => {
       const firstNode = nodes[0];
-      return await wretch(
-        `http://localhost:3000/node/${firstNode.id}`
+      return await GraphApi.url(
+        `/node/${firstNode.id}`
       ).delete().res();
     },
     onSuccess: () => {
@@ -166,8 +166,8 @@ const AddNodeOnEdgeDrop = (props: {
   const updateNodeDataMutation = useMutation({
     mutationFn: async (nodeData: NodeDataToUpdate) => {
       const { label, isChecked } = nodeData;
-      return await wretch(
-        `http://localhost:3000/node/${nodeData.nodeIdToUpdate}`
+      return await GraphApi.url(
+        `/node/${nodeData.nodeIdToUpdate}`
       ).patch({
         label,
         isChecked,
@@ -182,7 +182,7 @@ const AddNodeOnEdgeDrop = (props: {
 
   const entryMutation = useMutation({
     mutationFn: async (entry: EntryToCreate) => {
-      return await wretch("http://localhost:3000/entry").post({
+      return await GraphApi.url("/entry").post({
         nodeId: entry.nodeId,
         duration: entry.duration,
         startTime: entry.startTime,
@@ -268,7 +268,7 @@ const AddNodeOnEdgeDrop = (props: {
           data: { label: `Node ${id}` },
         };
 
-        wretch(`http://localhost:3000/node/${connectionState.fromNode.id}`).post().res(() => {
+        GraphApi.url(`/node/${connectionState.fromNode.id}`).post().res(() => {
           fetchGraph();
         });
 
