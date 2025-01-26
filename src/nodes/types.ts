@@ -1,13 +1,11 @@
 import type { Node } from "@xyflow/react";
 
-
 export type EntryToCreate = {
   duration: number;
   startTime: string;
   stopTime: string;
   nodeId: string;
 };
-
 
 export type Entry = EntryToCreate & {
   id: string;
@@ -40,12 +38,13 @@ export type NodeData = {
   entry: Entry;
   hightlight?: boolean;
   isRunning?: boolean;
+  isCollapsed?: boolean;
   commulativeDuration: number;
   totalTimeEntriersDuration: number;
   addTimeEntryToNode: (time: EntryToCreate) => void;
+  toggleExpand: (nodeId: TextNode) => void;
   updateNodeData: (nodeId: string, nodeData: NodeData) => void;
 };
-
 
 export type TextNode = Node<NodeData, "text-node">;
 export type AppNode = TextNode;

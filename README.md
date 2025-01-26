@@ -2,9 +2,6 @@
 
 ## TODO
 
-
-
-
 - [ ] graph
   - [x] render tree view
   - [x] text input for node
@@ -13,10 +10,13 @@
   - [x] track time node
   - [x] show total time for node
   - [x] show time entries of node
-  - [x] show/expand node
-  - [ ] show/expand node button
+  - [ ] show/expand
+    - [x] show/expand node
+    - [x] show/expand node button
+    - [ ] hide show/expand button when no children
+    - [ ] show/expand by nesting level?
   - [ ] calculate total based on month/week/day
-  - [ ] checkbox  
+  - [ ] checkbox
 - [ ] time entry
   - [x] edit
   - [x] highlight in tree
@@ -28,11 +28,10 @@
   - [ ] chart by tag time
 
 tech:
-- [ ] rect query 
+
+- [ ] rect query
   - [x] use react query
   - [x] update entries by pisemistic update
-
-
 
 ![](https://github.com/xyflow/web/blob/main/assets/codesandbox-header-ts.png?raw=true)
 

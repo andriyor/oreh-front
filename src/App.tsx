@@ -184,12 +184,54 @@ const AddNodeOnEdgeDrop = (props: {
     },
   });
 
+  const hidden = useRef<string[]>([]);
+  const isCollapsed = useRef<string[]>([]);
+
+  const toggleExpand = (node: TextNode) => {
+    const outgoerNodes = getOutgoersNested(node, nodes, edges);
+
+    const outgoerNodeIds = outgoerNodes.map((n) => n.id);
+    // filter in case click on same node
+    const withoutAlreadyHidden = outgoerNodeIds.filter(
+      (id) => !hidden.current.includes(id)
+    );
+
+    // filter already hidden in other three
+    const withoutHiddenIds = hidden.current.filter(
+      (id) => !outgoerNodeIds.includes(id)
+    );
+
+    hidden.current = [...withoutHiddenIds, ...withoutAlreadyHidden];
+
+    if (isCollapsed.current.includes(node.id)) {
+      isCollapsed.current = [
+        ...isCollapsed.current.filter((nodeId) => nodeId !== node.id),
+      ];
+    } else {
+      isCollapsed.current = [...isCollapsed.current, node.id];
+    }
+
+    setNodes((nds) =>
+      nds.map((node) => {
+        return {
+          ...node,
+          data: {
+            ...node.data,
+            isCollapsed: isCollapsed.current.includes(node.id),
+          },
+          hidden: hidden.current.includes(node.id),
+        };
+      })
+    );
+  };
+
   const augmentedNodes = nodes.map((node) => {
     return {
       ...node,
       data: {
         ...node.data,
         updateNodeData,
+        toggleExpand,
         addTimeEntryToNode: entryMutation.mutate,
       },
     };
@@ -238,34 +280,6 @@ const AddNodeOnEdgeDrop = (props: {
     });
   };
 
-  const hidden = useRef<string[]>([]);
-
-  const nodeClick = (_: unknown, node: TextNode) => {
-    const outgoerNodes = getOutgoersNested(node, nodes, edges);
-
-    const outgoerNodeIds = outgoerNodes.map((n) => n.id);
-    // filter in case click on same node
-    const withoutAlreadyHidden = outgoerNodeIds.filter(
-      (id) => !hidden.current.includes(id)
-    );
-
-    // filter already hidden in other three
-    const withoutHiddenIds = hidden.current.filter(
-      (id) => !outgoerNodeIds.includes(id)
-    );
-
-    hidden.current = [...withoutHiddenIds, ...withoutAlreadyHidden];
-
-    setNodes((nds) =>
-      nds.map((node) => {
-        return {
-          ...node,
-          hidden: hidden.current.includes(node.id),
-        };
-      })
-    );
-  };
-
   return (
     <ReactFlow
       nodes={augmentedNodes}
@@ -277,7 +291,6 @@ const AddNodeOnEdgeDrop = (props: {
       onConnect={onConnect}
       onNodesDelete={onNodesDelete}
       onConnectEnd={onConnectEnd}
-      onNodeClick={nodeClick}
       fitView
     >
       <Background />
