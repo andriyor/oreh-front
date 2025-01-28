@@ -22,7 +22,7 @@
   - [x] highlight in tree
   - [x] srart
   - [ ] post when started
-  - [ ] delete
+  - [x] delete
   - [ ] tags
 - [ ] tags
   - [ ] create
@@ -30,10 +30,18 @@
   - [ ] delete 
 - [ ] dashboard
   - [ ] chart by node time
+    - [x] basic chart
+    - [ ] show percengage and time
   - [ ] chart by tag time
+    - [x] basic chart
+    - [ ] show percengage and time
+  - [ ] insights
 - [ ] layout
   - [x] adaptive graph/time entries lise
   - [ ] better style
+- [ ] calendat
+  - [ ] for time enries
+  - [ ] for compleated tasks in day
 
 tech:
 
@@ -41,6 +49,12 @@ tech:
   - [x] use react query
   - [x] update entries by pisemistic update
   - [x] use fetch wrapper
+- [ ] cleanup code
+  - [ ] fix typescript
+  - [ ] strict eslint rules
+- [ ] use react compiler
+- [ ] add tests
+- [ ] better structure
 
 ![](https://github.com/xyflow/web/blob/main/assets/codesandbox-header-ts.png?raw=true)
 

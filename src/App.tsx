@@ -41,6 +41,7 @@ import { GraphApi } from "./api";
 import { VictoryPie, VictoryTheme } from "victory";
 import { TagList } from "./components/tags/Tags";
 import { TagValues } from "./components/tags/TagVlues";
+import { ChartByTags } from "./components/tags/TagChart";
 
 const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
 
@@ -366,6 +367,9 @@ const Wrapper = () => {
       </div>
       <div className="m-5">
         <TagValues onChange={(state) => setCheckboxState(state)} />
+      </div>
+      <div>
+        <ChartByTags/>
       </div>
     </div>
   );

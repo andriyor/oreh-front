@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { GraphApi } from "../../api";
 
-type Tags = {
+export type Tags = {
   id: string;
   label: string;
   type: string;

@@ -28,7 +28,7 @@ export const EntryList = (props: {
   });
 
   const groupped = groupBy(entries, (entry) =>
-    format(entry.startTime, "MM.dd")
+    format(entry.startTime, "MM.dd"),
   );
 
   return (
