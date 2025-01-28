@@ -12,8 +12,8 @@ import {
   useInteractions,
   useRole,
 } from "@floating-ui/react";
+import { EntryDatesWithNode, EntryWithNode } from "../../nodes/types";
 
-import { EntryWithNode, EntryDatesWithNode } from "../nodes/types";
 
 export const Time = ({
   entry,

@@ -2,9 +2,9 @@ import { format } from "date-fns";
 import { groupBy } from "lodash";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { EntryWithNode } from "../nodes/types";
+import { EntryWithNode } from "../../nodes/types";
 import { Entry } from "./Entry";
-import { GraphApi } from "../api";
+import { GraphApi } from "../../api";
 
 export const EntryList = (props: {
   onClick: (id: string) => void;

@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { EntryDatesWithNode, EntryWithNode } from "../nodes/types";
+import Play from "../../icons/play-solid.svg";
+import TrashIcon from "../../icons/trash-solid.svg";
+import DotsIcon from "../../icons/ellipsis-v-solid.svg";
+import { EntryDatesWithNode, EntryWithNode } from "../../nodes/types";
+import { GraphApi } from "../../api";
 import { Time } from "./Time";
-import Play from "../icons/play-solid.svg";
-import TrashIcon from "../icons/trash-solid.svg";
-import DotsIcon from "../icons/ellipsis-v-solid.svg";
-import { formatSeconds } from "../helpers";
-import { GraphApi } from "../api";
+import { formatSeconds } from "../../helpers";
 
 export const Entry = (props: {
   entry: EntryWithNode;

@@ -21,8 +21,13 @@
   - [x] edit
   - [x] highlight in tree
   - [x] srart
+  - [ ] post when started
   - [ ] delete
   - [ ] tags
+- [ ] tags
+  - [ ] create
+  - [ ] edit
+  - [ ] delete 
 - [ ] dashboard
   - [ ] chart by node time
   - [ ] chart by tag time

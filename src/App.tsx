@@ -35,10 +35,12 @@ import {
   NodeDataToUpdate,
   TextNode,
 } from "./nodes/types";
-import { EntryList } from "./components/EntryList";
+import { EntryList } from "./components/entry/EntryList";
 import { useMediaQuery } from "usehooks-ts";
 import { GraphApi } from "./api";
 import { VictoryPie, VictoryTheme } from "victory";
+import { TagList } from "./components/tags/Tags";
+import { TagValues } from "./components/tags/TagVlues";
 
 const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
 
@@ -94,6 +96,7 @@ const getOutgoersNested = (
 const AddNodeOnEdgeDrop = (props: {
   currentNodeId: string;
   runningNodeid: string;
+  checkboxState: unknown;
   onShowChart: (data: ChartData[]) => void;
 }) => {
   const queryClient = useQueryClient();
@@ -188,6 +191,7 @@ const AddNodeOnEdgeDrop = (props: {
           duration: entry.duration,
           startTime: entry.startTime,
           stopTime: entry.stopTime,
+          data: props.checkboxState,
         })
         .json();
     },
@@ -329,6 +333,7 @@ const Wrapper = () => {
   const [runningNodeid, setRunningNodeId] = useState("");
   const matches = useMediaQuery("(min-width: 1300px)");
   const [chartData, setChartData] = useState<ChartData[]>([]);
+  const [checkboxState, setCheckboxState] = useState<unknown>({});
 
   return (
     <div style={{ height: "100%", display: matches ? "flex" : "block" }}>
@@ -336,6 +341,7 @@ const Wrapper = () => {
         <ReactFlowProvider>
           <AddNodeOnEdgeDrop
             currentNodeId={nodeid}
+            checkboxState={checkboxState}
             onShowChart={(chart) => setChartData(chart)}
             runningNodeid={runningNodeid}
           />
@@ -355,6 +361,12 @@ const Wrapper = () => {
           />
         </div>
       </div>
+      <div className="m-5">
+        <TagList />
+      </div>
+      <div className="m-5">
+        <TagValues onChange={(state) => setCheckboxState(state)} />
+      </div>
     </div>
   );
 };
@@ -363,7 +375,7 @@ const queryClient = new QueryClient();
 
 export default () => (
   <QueryClientProvider client={queryClient}>
-    <Wrapper />;
+    <Wrapper />
     <ReactQueryDevtools initialIsOpen={false} />
   </QueryClientProvider>
 );
