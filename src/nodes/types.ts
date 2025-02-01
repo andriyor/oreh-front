@@ -23,13 +23,15 @@ export type EntryWithNode = {
   duration: number;
   startTime: string;
   stopTime: string;
+  data: Record<string, string>;
   node: BaseNode;
 };
 
 export type EntryDatesWithNode = {
-  duration: number;
-  startTime: Date;
-  stopTime: Date;
+  duration?: number;
+  startTime?: Date;
+  stopTime?: Date;
+  data?: Record<string, string>;
 };
 
 export type NodeData = {
@@ -52,9 +54,8 @@ export type NodeData = {
 };
 
 export type NodeDataToUpdate = NodeData & {
-  nodeIdToUpdate: string
-}
-
+  nodeIdToUpdate: string;
+};
 
 export type TextNode = Node<NodeData, "text-node">;
 export type AppNode = TextNode;

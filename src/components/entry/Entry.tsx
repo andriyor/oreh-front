@@ -1,12 +1,15 @@
 import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import Play from "../../icons/play-solid.svg";
 import TrashIcon from "../../icons/trash-solid.svg";
 import DotsIcon from "../../icons/ellipsis-v-solid.svg";
+
 import { EntryDatesWithNode, EntryWithNode } from "../../nodes/types";
 import { GraphApi } from "../../api";
 import { Time } from "./Time";
 import { formatSeconds } from "../../helpers";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { EntryTags } from "./EntryTags";
 
 export const Entry = (props: {
   entry: EntryWithNode;
@@ -36,11 +39,15 @@ export const Entry = (props: {
         borderBottomWidth: "1px",
       }}
     >
-      <div className="basis-6/12 mr-3">
+      <div className="basis-3/12 mr-3">
         Node label: {props.entry.node.data?.label || ""}
       </div>
 
-      <div className="flex basis-5/12 justify-end">
+      <div className="basis-4/12">
+        <EntryTags entry={props.entry} onUpdate={updateEntryMutation.mutate}/>
+      </div>
+
+      <div className="flex basis-4/12 justify-end">
         <div className="mr-3">
           <Time entry={localEntry} onUpdate={updateEntryMutation.mutate} />
         </div>

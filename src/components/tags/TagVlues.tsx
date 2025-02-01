@@ -9,16 +9,17 @@ type Tags = {
 };
 
 export const TagValues = (props: {
-  onChange: (value: unknown) => void
+  entryTags: Record<string, string>;
+  onChange: (value: Record<string, string>) => void;
 }) => {
+  const [state, setState] = useState(props.entryTags);
+
   const { data: tags } = useQuery<Tags[]>({
     queryKey: ["tags"],
     queryFn: async () => {
       return await GraphApi.url("/tags").get().json();
     },
   });
-
-  const [state, setState] = useState({});
 
   const ranges = [
     {
@@ -49,8 +50,8 @@ export const TagValues = (props: {
     <div>
       {tags?.map((tag) => {
         return (
-          <div key={tag.id} className="flex">
-            <div>{tag.label}</div>
+          <div key={tag.id} className="flex mb-2">
+            <div className="mr-2">{tag.label}</div>
             <div>
               {tag.type === "range" && (
                 <div>
@@ -63,7 +64,11 @@ export const TagValues = (props: {
                   >
                     {ranges.map((r) => {
                       return (
-                        <option key={r.value} value={r.value}>
+                        <option
+                          selected={props.entryTags[tag.label] === r.value}
+                          key={r.value}
+                          value={r.value}
+                        >
                           {r.label}
                         </option>
                       );
@@ -75,7 +80,6 @@ export const TagValues = (props: {
           </div>
         );
       })}
-      <div>{JSON.stringify(state)}</div>
     </div>
   );
 };

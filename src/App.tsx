@@ -356,7 +356,7 @@ const Wrapper = () => {
             <TagList />
           </div>
           <div className="m-5">
-            <TagValues onChange={(state) => setCheckboxState(state)} />
+            <TagValues entryTags={{}} onChange={(state) => setCheckboxState(state)} />
           </div>
           <div>
             <ChartByTags />
