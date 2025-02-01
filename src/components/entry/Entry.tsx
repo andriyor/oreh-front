@@ -6,19 +6,26 @@ import { EntryDatesWithNode, EntryWithNode } from "../../nodes/types";
 import { GraphApi } from "../../api";
 import { Time } from "./Time";
 import { formatSeconds } from "../../helpers";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const Entry = (props: {
   entry: EntryWithNode;
   onStartTimer: () => void;
   onDelete: () => void;
 }) => {
+  const queryClient = useQueryClient();
   const [localEntry, setLocalEntry] = useState(props.entry);
 
-  const handleUpdate = (entry: EntryDatesWithNode) => {
-    GraphApi.url(`/entry/${localEntry.id}`)
-      .put(entry)
-      .json((json) => setLocalEntry(json));
-  };
+  const updateEntryMutation = useMutation({
+    mutationFn: async (entry: EntryDatesWithNode) => {
+      return await GraphApi.url(`/entry/${localEntry.id}`)
+        .put(entry)
+        .json((json) => setLocalEntry(json));
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["entry"] });
+    },
+  });
 
   return (
     <div
@@ -30,12 +37,12 @@ export const Entry = (props: {
       }}
     >
       <div className="basis-6/12 mr-3">
-        Node label: {props.entry.node.data.label}
+        Node label: {props.entry.node.data?.label || ""}
       </div>
 
       <div className="flex basis-5/12 justify-end">
         <div className="mr-3">
-          <Time entry={localEntry} onUpdate={handleUpdate} />
+          <Time entry={localEntry} onUpdate={updateEntryMutation.mutate} />
         </div>
         <div className="mr-3">{formatSeconds(localEntry.duration)}</div>
       </div>

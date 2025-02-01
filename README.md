@@ -24,10 +24,11 @@
   - [ ] post when started
   - [x] delete
   - [ ] tags
+  - [ ] not refetch whole list after update of single entry
 - [ ] tags
   - [ ] create
   - [ ] edit
-  - [ ] delete 
+  - [ ] delete
 - [ ] dashboard
   - [ ] chart by node time
     - [x] basic chart
@@ -36,12 +37,14 @@
     - [x] basic chart
     - [ ] show percengage and time
   - [ ] insights
+  - [ ] cal-heatmap
 - [ ] layout
   - [x] adaptive graph/time entries lise
   - [ ] better style
 - [ ] calendat
   - [ ] for time enries
   - [ ] for compleated tasks in day
+- [ ] auth
 
 tech:
 
@@ -52,6 +55,7 @@ tech:
 - [ ] cleanup code
   - [ ] fix typescript
   - [ ] strict eslint rules
+  - [ ] import order
 - [ ] use react compiler
 - [ ] add tests
 - [ ] better structure

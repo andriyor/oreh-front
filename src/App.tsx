@@ -348,7 +348,20 @@ const Wrapper = () => {
           />
         </ReactFlowProvider>
       </div>
+
       <div className="flex m-5" style={{ width: matches ? "50%" : "98%" }}>
+        <div>
+          Current tags startTime:
+          <div className="m-5">
+            <TagList />
+          </div>
+          <div className="m-5">
+            <TagValues onChange={(state) => setCheckboxState(state)} />
+          </div>
+          <div>
+            <ChartByTags />
+          </div>
+        </div>
         {Boolean(chartData.length) && (
           <div style={{ height: "350px" }}>
             <VictoryPie data={chartData} theme={VictoryTheme.clean} />
@@ -361,15 +374,6 @@ const Wrapper = () => {
             onStartTimer={(id) => setRunningNodeId(id)}
           />
         </div>
-      </div>
-      <div className="m-5">
-        <TagList />
-      </div>
-      <div className="m-5">
-        <TagValues onChange={(state) => setCheckboxState(state)} />
-      </div>
-      <div>
-        <ChartByTags/>
       </div>
     </div>
   );

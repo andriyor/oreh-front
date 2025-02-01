@@ -1,5 +1,16 @@
 import { useState, useRef, useEffect } from "react";
-import { format, setHours, setMinutes, differenceInSeconds } from "date-fns";
+import {
+  format,
+  setHours,
+  setMinutes,
+  differenceInSeconds,
+  getDay,
+  getYear,
+  setYear,
+  setDay,
+  getMonth,
+  setMonth,
+} from "date-fns";
 import {
   autoUpdate,
   flip,
@@ -12,66 +23,90 @@ import {
   useInteractions,
   useRole,
 } from "@floating-ui/react";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
+import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
+
 import { EntryDatesWithNode, EntryWithNode } from "../../nodes/types";
 
+const updateHoursAndMinutes = (
+  initialTime: Date,
+  newHoursMinutesTime: string,
+  dateYear: { day: number; month: number; year: number },
+) => {
+  const [startHours, startMinutes] = newHoursMinutesTime.split(":");
+  const updated = setHours(
+    setMinutes(initialTime, Number(startMinutes)),
+    Number(startHours),
+  );
+  return setYear(
+    setMonth(setDay(updated, dateYear.day), dateYear.month),
+    dateYear.year,
+  );
+};
 
-export const Time = ({
-  entry,
-  onUpdate,
-}: {
+export const Time = (props: {
   entry: EntryWithNode;
   onUpdate: (entry: EntryDatesWithNode) => void;
 }) => {
-  const [localEntry, setLocalEntry] = useState(entry);
+  const [calendarValue, setCalendarValue] = useState<Date>(
+    new Date(props.entry.startTime),
+  );
+  const [localEntry, setLocalEntry] = useState(props.entry);
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    setLocalEntry(entry);
-  }, [entry]);
+    setLocalEntry(props.entry);
+  }, [props.entry]);
 
   const initialStartTime = useRef(new Date(localEntry.startTime));
   const initialStopTime = useRef(new Date(localEntry.stopTime));
 
   const [formatedStartTime, setFormatedStartTime] = useState(
-    format(localEntry.startTime, "HH:mm")
+    format(localEntry.startTime, "HH:mm"),
   );
   const [formatedStopTime, setFormatedStopTime] = useState(
-    format(localEntry.stopTime, "HH:mm")
+    format(localEntry.stopTime, "HH:mm"),
   );
 
   const initialFormatedStartTime = useRef(formatedStartTime);
   const initialFormatedStopTime = useRef(formatedStopTime);
 
-  const updateHoursAndMinutes = (
-    newHoursMinutesTime: string,
-    initialTime: Date
-  ) => {
-    const [startHours, startMinutes] = newHoursMinutesTime.split(":");
-    return setHours(
-      setMinutes(initialTime, Number(startMinutes)),
-      Number(startHours)
-    );
-  };
+  const initialYear = useRef(getYear(localEntry.startTime));
+  const initialMonth = useRef(getMonth(localEntry.startTime));
+  const initialDay = useRef(getDay(localEntry.startTime));
 
-  const onOpenChange = (value: boolean) => {
-    setIsOpen(value);
+  const onOpenChange = (isCurrentlyOpen: boolean) => {
+    setIsOpen(isCurrentlyOpen);
 
-    if (!value) {
-      if (
+    if (!isCurrentlyOpen) {
+      const year = getYear(calendarValue);
+      const month = getMonth(calendarValue);
+      const day = getDay(calendarValue);
+
+      const isCalendarChanged =
+        year !== initialYear.current ||
+        month !== initialMonth.current ||
+        day !== initialDay.current;
+
+      const isTimeChanged =
         initialFormatedStartTime.current !== formatedStartTime ||
-        initialFormatedStopTime.current !== formatedStopTime
-      ) {
+        initialFormatedStopTime.current !== formatedStopTime;
+
+      if (isCalendarChanged || isTimeChanged) {
         const newStartTime = updateHoursAndMinutes(
+          initialStartTime.current,
           formatedStartTime,
-          initialStartTime.current
+          { day, month, year },
         );
         const newStopTime = updateHoursAndMinutes(
+          initialStopTime.current,
           formatedStopTime,
-          initialStopTime.current
+          { day, month, year },
         );
 
         const duration = differenceInSeconds(newStopTime, newStopTime);
-        onUpdate({
+        props.onUpdate({
           duration,
           startTime: newStartTime,
           stopTime: newStopTime,
@@ -111,28 +146,38 @@ export const Time = ({
       {isOpen && (
         <FloatingFocusManager context={context} modal={false}>
           <div
+            className="rounded-lg shadow-xl"
             ref={refs.setFloating}
             style={{ ...floatingStyles, backgroundColor: "white" }}
             {...getFloatingProps()}
           >
-            <div className="flex">
+            <div className="grid grid-cols-2 gap-4 p-5">
               <div>
-                <div>Start:</div>
+                <div className="mb-2">Start:</div>
                 <input
+                  style={{ width: "125px" }}
                   type="text"
                   defaultValue={formatedStartTime}
                   onChange={(e) => setFormatedStartTime(e.target.value)}
                 />
               </div>
               <div>
-                <div>Stop:</div>
+                <div className="mb-2">Stop:</div>
                 <input
+                  style={{ width: "125px" }}
                   type="text"
                   defaultValue={formatedStopTime}
                   onChange={(e) => setFormatedStopTime(e.target.value)}
                 />
               </div>
             </div>
+            <div className="h-px bg-gray-300"></div>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DateCalendar
+                value={calendarValue}
+                onChange={(newValue) => setCalendarValue(newValue)}
+              />
+            </LocalizationProvider>
           </div>
         </FloatingFocusManager>
       )}
