@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "stat": "tokei --output json | jq -r 'to_entries[] | \"\\(.key): \\(.value.code)\"' > stat.txt",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
