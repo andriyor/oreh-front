@@ -25,8 +25,11 @@
   - [ ] post when started
   - [x] delete
   - [ ] tags
+  - [ ] only one timer can be runned at the same time
   - [ ] not refetch whole list after update of single entry
 - [ ] tags
+  - [x] tags state
+  - [ ] store tags state
   - [ ] create
   - [ ] edit
   - [ ] delete

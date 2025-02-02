@@ -37,7 +37,7 @@ import {
   nodeTypes,
 } from "./features/tree/components/types";
 import { EntryList } from "./features/time-entry/components/EntryList";
-import { useMediaQuery } from "usehooks-ts";
+import { useLocalStorage, useMediaQuery } from "usehooks-ts";
 import { GraphApi } from "./api";
 import { VictoryPie, VictoryTheme } from "victory";
 import { TagList } from "./features/tags/components/Tags";
@@ -209,7 +209,6 @@ const AddNodeOnEdgeDrop = (props: {
   });
 
   const showChart = (node: GrapNode) => {
-    console.log('showChart', node)
     const out = getOutgoers(node, nodes, edges);
     const chartData: ChartData[] = out.map((n) => {
       return {
@@ -262,7 +261,7 @@ const AddNodeOnEdgeDrop = (props: {
   };
 
   const augmentedNodes = nodes.map((node) => {
-    return {     
+    return {
       ...node,
       data: {
         ...node.data,
@@ -358,7 +357,7 @@ const Wrapper = () => {
   const [runningNodeid, setRunningNodeId] = useState("");
   const matches = useMediaQuery("(min-width: 1300px)");
   const [chartData, setChartData] = useState<ChartData[]>([]);
-  const [checkboxState, setCheckboxState] = useState<unknown>({});
+  const [checkboxState, setCheckboxState] = useLocalStorage("tags-state", {});
 
   return (
     <div style={{ height: "100%", display: matches ? "flex" : "block" }}>
@@ -375,13 +374,13 @@ const Wrapper = () => {
 
       <div className="flex m-5" style={{ width: matches ? "50%" : "98%" }}>
         <div>
-          Current tags startTime:
           <div className="m-5">
             <TagList />
           </div>
-          <div className="m-5">
+          <div className="p-5 border-1 rounded-md border-solid border-gray-600">
+            Current tags startTime:
             <TagValues
-              entryTags={{}}
+              entryTags={checkboxState}
               onChange={(state) => setCheckboxState(state)}
             />
           </div>
