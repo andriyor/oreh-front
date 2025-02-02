@@ -17,6 +17,7 @@
     - [ ] show/expand by nesting level?
   - [ ] calculate total based on month/week/day
   - [x] checkbox
+  - [x] change source of node
 - [ ] time entry
   - [x] edit
   - [x] highlight in tree
@@ -45,6 +46,10 @@
   - [ ] for time enries
   - [ ] for compleated tasks in day
 - [ ] auth
+
+bugs:
+- [ ] order changed after add node
+
 
 tech:
 

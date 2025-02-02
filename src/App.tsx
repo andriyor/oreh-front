@@ -13,6 +13,7 @@ import {
   Position,
   Edge,
   getOutgoers,
+  FinalConnectionState,
 } from "@xyflow/react";
 import dagre from "@dagrejs/dagre";
 import {
@@ -271,7 +272,8 @@ const AddNodeOnEdgeDrop = (props: {
   });
 
   const onConnectEnd = useCallback(
-    (event, connectionState) => {
+    (event, connectionState: FinalConnectionState) => {
+      console.log("connectionState", connectionState);
       // when a connection is dropped on the pane it's not valid
       if (!connectionState.isValid) {
         // we need to remove the wrapper bounds, in order to get the correct position
@@ -300,6 +302,23 @@ const AddNodeOnEdgeDrop = (props: {
         setEdges((eds) =>
           eds.concat({ id, source: connectionState.fromNode.id, target: id }),
         );
+      }
+
+      if (
+        connectionState.isValid &&
+        connectionState.fromNode?.sourcePosition === "right" &&
+        connectionState.toNode
+      ) {
+        const targetId = connectionState.fromNode.id;
+        const sourceId = connectionState.toNode.id;
+        GraphApi.url("/node/cgange")
+          .post({
+            targetId,
+            sourceId,
+          })
+          .res(() => {
+            fetchGraph();
+          });
       }
     },
     [screenToFlowPosition],
