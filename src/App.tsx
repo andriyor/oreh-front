@@ -25,8 +25,8 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import "@xyflow/react/dist/style.css";
 
-import { nodeTypes } from "./nodes";
-import { edgeTypes } from "./edges";
+import { nodeTypes } from "./features/tree/components";
+import { edgeTypes } from "./features/tree/components/edges";
 
 import {
   AppNode,
@@ -34,15 +34,15 @@ import {
   EntryToCreate,
   NodeDataToUpdate,
   TextNode,
-} from "./nodes/types";
-import { EntryList } from "./components/entry/EntryList";
+} from "./features/tree/components/types";
+import { EntryList } from "./features/time-entry/components/EntryList";
 import { useMediaQuery } from "usehooks-ts";
 import { GraphApi } from "./api";
 import { VictoryPie, VictoryTheme } from "victory";
-import { TagList } from "./components/tags/Tags";
-import { TagValues } from "./components/tags/TagVlues";
-import { ChartByTags } from "./components/tags/TagChart";
-import { HeatMap } from "./components/HeatMap";
+import { TagList } from "./features/tags/components/Tags";
+import { TagValues } from "./features/tags/components/TagVlues";
+import { HeatMap } from "./features/dashboard/components/HeatMap";
+import { ChartByTags } from "./features/tags/components/TagChart";
 
 const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
 

@@ -27,7 +27,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 
-import { EntryDatesWithNode, EntryWithNode } from "../../nodes/types";
+import { EntryDatesWithNode, EntryWithNode } from "../../tree/components/types";
 
 const updateHoursAndMinutes = (
   initialTime: Date,

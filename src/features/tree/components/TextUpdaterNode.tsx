@@ -1,10 +1,12 @@
 import { useCallback, useState } from "react";
 import { Handle, Position } from "@xyflow/react";
-import { Timer, TimerApp } from "./Timer";
-import DotsIcon from "../icons/ellipsis-v-solid.svg";
+
 import { TextNode } from "./types";
-import MinusIcon from "../icons/minus-solid.svg";
-import PlusIcon from "../icons/plus-solid.svg";
+import { Timer, TimerApp } from "./Timer";
+
+import DotsIcon from "../../../icons/ellipsis-v-solid.svg";
+import MinusIcon from "../../../icons/minus-solid.svg";
+import PlusIcon from "../../../icons/plus-solid.svg";
 
 export type TimeEntry = {
   time: number;

@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import Play from "../../icons/play-solid.svg";
-import TrashIcon from "../../icons/trash-solid.svg";
-import DotsIcon from "../../icons/ellipsis-v-solid.svg";
+import Play from "../../../icons/play-solid.svg";
+import TrashIcon from "../../../icons/trash-solid.svg";
+import DotsIcon from "../../../icons/ellipsis-v-solid.svg";
 
-import { EntryDatesWithNode, EntryWithNode } from "../../nodes/types";
-import { GraphApi } from "../../api";
+import { EntryDatesWithNode, EntryWithNode } from "../../tree/components/types";
+import { GraphApi } from "../../../api";
 import { Time } from "./Time";
-import { formatSeconds } from "../../helpers";
+import { formatSeconds } from "../../../utils";
 import { EntryTags } from "./EntryTags";
 
 export const Entry = (props: {

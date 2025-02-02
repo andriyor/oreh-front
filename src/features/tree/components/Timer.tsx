@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
-import Stop from "../icons/stop-solid.svg";
-import Play from "../icons/play-solid.svg";
-import { formatSeconds } from "../helpers";
+import Stop from "../../../icons/stop-solid.svg";
+import Play from "../../../icons/play-solid.svg";
+import { formatSeconds } from "../../../utils";
 
 export type Timer = {
   duration: number;

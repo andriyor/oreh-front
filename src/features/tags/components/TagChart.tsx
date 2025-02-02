@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { EntryWithNode } from "../../nodes/types";
-import { GraphApi } from "../../api";
 import { get } from "lodash";
 import { useMemo, useState } from "react";
 import { VictoryPie, VictoryTheme } from "victory";
+import { EntryWithNode } from "../../tree/components/types";
+import { GraphApi } from "../../../api";
 import { Tags } from "./Tags";
 
 export const ChartByTags = () => {

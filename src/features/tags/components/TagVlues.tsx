@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { GraphApi } from "../../api";
+import { GraphApi } from "../../../api";
 import { useState } from "react";
 
 type Tags = {

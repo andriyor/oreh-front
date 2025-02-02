@@ -11,8 +11,8 @@ import {
   useRole,
 } from "@floating-ui/react";
 import { useState } from "react";
-import { TagValues } from "../tags/TagVlues";
-import { EntryDatesWithNode, EntryWithNode } from "../../nodes/types";
+import { TagValues } from "../../tags/components/TagVlues";
+import { EntryDatesWithNode, EntryWithNode } from "../../tree/components/types";
 
 export const EntryTags = (props: {
   entry: EntryWithNode;
