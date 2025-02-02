@@ -14,6 +14,7 @@ import {
   Edge,
   getOutgoers,
   FinalConnectionState,
+  Connection,
 } from "@xyflow/react";
 import dagre from "@dagrejs/dagre";
 import {
@@ -34,6 +35,8 @@ import {
   Entry,
   EntryToCreate,
   NodeDataToUpdate,
+  NodeDb,
+  NodeWithPosition,
   TextNode,
 } from "./features/tree/components/types";
 import { EntryList } from "./features/time-entry/components/EntryList";
@@ -50,7 +53,11 @@ const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
 const nodeWidth = 450;
 const nodeHeight = 36;
 
-const getLayoutedElements = (nodes, edges, direction = "TB") => {
+const getLayoutedElements = (
+  nodes: NodeDb[],
+  edges: Edge[],
+  direction = "TB",
+) => {
   const isHorizontal = direction === "LR";
   dagreGraph.setGraph({ rankdir: direction });
 
@@ -64,7 +71,7 @@ const getLayoutedElements = (nodes, edges, direction = "TB") => {
 
   dagre.layout(dagreGraph);
 
-  const newNodes = nodes.map((node) => {
+  const newNodes: NodeWithPosition[] = nodes.map((node) => {
     const nodeWithPosition = dagreGraph.node(node.id);
     const newNode = {
       ...node,
@@ -112,7 +119,7 @@ const AddNodeOnEdgeDrop = (props: {
       .json((json) => {
         const { nodes: layoutedNodes, edges: layoutedEdges } =
           getLayoutedElements(
-            json.nodes.map((node) => {
+            json.nodes.map((node: NodeDb) => {
               return {
                 ...node,
                 type: "text-node",
@@ -148,7 +155,7 @@ const AddNodeOnEdgeDrop = (props: {
   const { screenToFlowPosition } = useReactFlow();
 
   const onConnect = useCallback(
-    (params) =>
+    (params: Connection) =>
       setEdges((eds) =>
         addEdge(
           { ...params, type: ConnectionLineType.SmoothStep, animated: true },
@@ -259,7 +266,7 @@ const AddNodeOnEdgeDrop = (props: {
   };
 
   const augmentedNodes = nodes.map((node) => {
-    return {
+    return {     
       ...node,
       data: {
         ...node.data,

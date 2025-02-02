@@ -8,7 +8,7 @@ import DotsIcon from "../../../icons/ellipsis-v-solid.svg";
 import { EntryDatesWithNode, EntryWithNode } from "../../tree/components/types";
 import { GraphApi } from "../../../api";
 import { Time } from "./Time";
-import { formatSeconds } from "../../../utils";
+import { formatSeconds } from "../../../helpers";
 import { EntryTags } from "./EntryTags";
 
 export const Entry = (props: {

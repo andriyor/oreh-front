@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { Handle, Position } from "@xyflow/react";
+import { Handle, NodeProps, Position } from "@xyflow/react";
 
 import { TextNode } from "./types";
 import { Timer, TimerApp } from "./Timer";
@@ -22,7 +22,7 @@ function debounce(func: Function, delay: number) {
   };
 }
 
-export function TextUpdaterNode(props: TextNode) {
+export function TextUpdaterNode(props: NodeProps<TextNode>) {
   const [inputValue, setInputValue] = useState(props.data.label || "");
 
   const handleDebouncedChange = useCallback(

@@ -34,7 +34,8 @@ export type EntryDatesWithNode = {
   data?: Record<string, string>;
 };
 
-export type NodeData = {
+export type NodeDb = {
+  id: string;
   // stored properties
   label?: string;
   time?: number;
@@ -43,6 +44,22 @@ export type NodeData = {
   // not stored properties
   commulativeDuration: number;
   totalTimeEntriersDuration: number;
+};
+
+export type NodePosition = {
+  // targetPosition: "left" | "top";
+  targetPosition: string;
+  // sourcePosition: "right" | "bottom";
+  sourcePosition: string;
+  position: {
+    x: number;
+    y: number;
+  };
+};
+
+export type NodeWithPosition = NodeDb & NodePosition;
+
+export type NodeData = NodeDb & {
   // runtime properties
   hightlight?: boolean;
   isCollapsed?: boolean;
@@ -57,5 +74,15 @@ export type NodeDataToUpdate = NodeData & {
   nodeIdToUpdate: string;
 };
 
+export type Edge = {
+  id: string;
+  source: string;
+};
+
 export type TextNode = Node<NodeData, "text-node">;
 export type AppNode = TextNode;
+
+export type Graph = {
+  edges: Edge[];
+  nodes: NodeDb[];
+};
