@@ -42,6 +42,7 @@ import { VictoryPie, VictoryTheme } from "victory";
 import { TagList } from "./components/tags/Tags";
 import { TagValues } from "./components/tags/TagVlues";
 import { ChartByTags } from "./components/tags/TagChart";
+import { HeatMap } from "./components/HeatMap";
 
 const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
 
@@ -330,6 +331,7 @@ type ChartData = {
 };
 
 const Wrapper = () => {
+  console.log("Wrapper");
   const [nodeid, setNodeId] = useState("");
   const [runningNodeid, setRunningNodeId] = useState("");
   const matches = useMediaQuery("(min-width: 1300px)");
@@ -356,7 +358,10 @@ const Wrapper = () => {
             <TagList />
           </div>
           <div className="m-5">
-            <TagValues entryTags={{}} onChange={(state) => setCheckboxState(state)} />
+            <TagValues
+              entryTags={{}}
+              onChange={(state) => setCheckboxState(state)}
+            />
           </div>
           <div>
             <ChartByTags />
@@ -374,6 +379,9 @@ const Wrapper = () => {
             onStartTimer={(id) => setRunningNodeId(id)}
           />
         </div>
+      </div>
+      <div className="m-5">
+        <HeatMap />
       </div>
     </div>
   );
