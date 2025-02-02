@@ -17,7 +17,7 @@
     "@mui/x-date-pickers": "^7.25.0",
     "@tanstack/react-query": "^5.64.2",
     "@tanstack/react-query-devtools": "^5.64.2",
-    "@xyflow/react": "^12.3.6",
+    "@xyflow/react": "^12.4.2",
     "cal-heatmap": "^4.2.4",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
