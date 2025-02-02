@@ -1,4 +1,6 @@
-import type { Node } from "@xyflow/react";
+import type { Node, Position, NodeTypes, NodeProps } from "@xyflow/react";
+
+import { TextUpdaterNode } from "./TextUpdaterNode";
 
 export type EntryToCreate = {
   duration: number;
@@ -34,8 +36,7 @@ export type EntryDatesWithNode = {
   data?: Record<string, string>;
 };
 
-export type NodeDb = {
-  id: string;
+export type NodeDataDb = {
   // stored properties
   label?: string;
   time?: number;
@@ -47,26 +48,27 @@ export type NodeDb = {
 };
 
 export type NodePosition = {
-  // targetPosition: "left" | "top";
-  targetPosition: string;
-  // sourcePosition: "right" | "bottom";
-  sourcePosition: string;
+  targetPosition: Position;
+  sourcePosition: Position;
   position: {
     x: number;
     y: number;
   };
 };
 
-export type NodeWithPosition = NodeDb & NodePosition;
+export type GrapNode = NodePosition & {
+  id: string;
+  data: NodeDataDb;
+};
 
-export type NodeData = NodeDb & {
+export type NodeData = NodeDataDb & {
   // runtime properties
   hightlight?: boolean;
   isCollapsed?: boolean;
   isRunning?: boolean;
   addTimeEntryToNode: (time: EntryToCreate) => void;
-  toggleExpand: (nodeId: TextNode) => void;
-  showChart: (nodeId: TextNode) => void;
+  toggleExpand: (nodeId: NodeProps<TextNode>) => void;
+  showChart: (nodeId: NodeProps<TextNode>) => void;
   updateNodeData: (nodeData: NodeDataToUpdate) => void;
 };
 
@@ -84,5 +86,11 @@ export type AppNode = TextNode;
 
 export type Graph = {
   edges: Edge[];
-  nodes: NodeDb[];
+  nodes: GrapNode[];
 };
+
+
+export const nodeTypes = {
+  "text-node": TextUpdaterNode,
+  // Add any of your custom nodes here!
+} satisfies NodeTypes;

@@ -27,17 +27,14 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import "@xyflow/react/dist/style.css";
 
-import { nodeTypes } from "./features/tree/components";
 import { edgeTypes } from "./features/tree/components/edges";
 
 import {
-  AppNode,
   Entry,
   EntryToCreate,
+  GrapNode,
   NodeDataToUpdate,
-  NodeDb,
-  NodeWithPosition,
-  TextNode,
+  nodeTypes,
 } from "./features/tree/components/types";
 import { EntryList } from "./features/time-entry/components/EntryList";
 import { useMediaQuery } from "usehooks-ts";
@@ -54,7 +51,7 @@ const nodeWidth = 450;
 const nodeHeight = 36;
 
 const getLayoutedElements = (
-  nodes: NodeDb[],
+  nodes: GrapNode[],
   edges: Edge[],
   direction = "TB",
 ) => {
@@ -71,12 +68,12 @@ const getLayoutedElements = (
 
   dagre.layout(dagreGraph);
 
-  const newNodes: NodeWithPosition[] = nodes.map((node) => {
+  const newNodes: GrapNode[] = nodes.map((node) => {
     const nodeWithPosition = dagreGraph.node(node.id);
     const newNode = {
       ...node,
-      targetPosition: isHorizontal ? "left" : "top",
-      sourcePosition: isHorizontal ? "right" : "bottom",
+      targetPosition: isHorizontal ? Position.Left : Position.Top,
+      sourcePosition: isHorizontal ? Position.Right : Position.Bottom,
       // We are shifting the dagre node position (anchor=center center) to the top left
       // so it matches the React Flow node anchor point (top left).
       position: {
@@ -95,10 +92,10 @@ let id = 1;
 const getId = () => `${id++}`;
 
 const getOutgoersNested = (
-  node: TextNode,
-  nodes: TextNode[],
+  node: GrapNode,
+  nodes: GrapNode[],
   edges: Edge[],
-): TextNode[] => {
+): GrapNode[] => {
   const out = getOutgoers(node, nodes, edges);
   return [...out, ...out.flatMap((n) => getOutgoersNested(n, nodes, edges))];
 };
@@ -110,7 +107,7 @@ const AddNodeOnEdgeDrop = (props: {
   onShowChart: (data: ChartData[]) => void;
 }) => {
   const queryClient = useQueryClient();
-  const [nodes, setNodes, onNodesChange] = useNodesState<AppNode>([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<GrapNode>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
   const fetchGraph = () => {
@@ -119,7 +116,7 @@ const AddNodeOnEdgeDrop = (props: {
       .json((json) => {
         const { nodes: layoutedNodes, edges: layoutedEdges } =
           getLayoutedElements(
-            json.nodes.map((node: NodeDb) => {
+            json.nodes.map((node: GrapNode) => {
               return {
                 ...node,
                 type: "text-node",
@@ -166,7 +163,7 @@ const AddNodeOnEdgeDrop = (props: {
   );
 
   const nodeDeleteMutation = useMutation({
-    mutationFn: async (nodes: AppNode[]) => {
+    mutationFn: async (nodes: GrapNode[]) => {
       const firstNode = nodes[0];
       return await GraphApi.url(`/node/${firstNode.id}`).delete().res();
     },
@@ -211,23 +208,22 @@ const AddNodeOnEdgeDrop = (props: {
     },
   });
 
-  const showChart = (node: TextNode) => {
+  const showChart = (node: GrapNode) => {
+    console.log('showChart', node)
     const out = getOutgoers(node, nodes, edges);
-    console.log("out", out);
     const chartData: ChartData[] = out.map((n) => {
       return {
         x: n.data.label || "",
         y: n.data.totalTimeEntriersDuration,
       };
     });
-    console.log("chartData", chartData);
     props.onShowChart(chartData);
   };
 
   const hidden = useRef<string[]>([]);
   const isCollapsed = useRef<string[]>([]);
 
-  const toggleExpand = (node: TextNode) => {
+  const toggleExpand = (node: GrapNode) => {
     const outgoerNodes = getOutgoersNested(node, nodes, edges);
 
     const outgoerNodeIds = outgoerNodes.map((n) => n.id);
