@@ -7,17 +7,26 @@
   - [x] text input for node
   - [x] add node
   - [x] delete node
-  - [x] track time node
-  - [x] show total time for node
-  - [x] show time entries of node
+  - [ ] track time node
+    - [x] start timer from node
+    - [x] show total time for node
+    - [x] show time entries of node
+    - [ ] stop currenty running timer when pressing start
+    - [ ] calculate total based on month/week/day
+    - [ ] highlight currentry running node
+    - [ ] stop timer from node?
   - [ ] show/expand
     - [x] show/expand node
     - [x] show/expand node button
     - [ ] hide show/expand button when no children
     - [ ] show/expand by nesting level?
-  - [ ] calculate total based on month/week/day
   - [x] checkbox
   - [x] change source of node
+  - [ ] recurring task
+  - [ ] goals
+  - [ ] habbits positive/negative
+  - [ ] priority
+  - [ ] change color of node
 - [ ] time entry
   - [x] edit
   - [x] highlight in tree
@@ -49,10 +58,11 @@
   - [ ] for time enries
   - [ ] for compleated tasks in day
 - [ ] auth
+- [ ] task for week/month/day
 
 bugs:
-- [ ] order changed after add node
 
+- [ ] order changed after add node
 
 tech:
 

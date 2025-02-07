@@ -21,6 +21,7 @@ import {
   QueryClient,
   QueryClientProvider,
   useMutation,
+  useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -30,8 +31,7 @@ import "@xyflow/react/dist/style.css";
 import { edgeTypes } from "./features/tree/components/edges";
 
 import {
-  Entry,
-  EntryToCreate,
+  Graph,
   GrapNode,
   NodeDataToUpdate,
   nodeTypes,
@@ -44,6 +44,8 @@ import { TagList } from "./features/tags/components/Tags";
 import { TagValues } from "./features/tags/components/TagVlues";
 import { HeatMap } from "./features/dashboard/components/HeatMap";
 import { ChartByTags } from "./features/tags/components/TagChart";
+import { TopTimer } from "./components/Timer";
+import { useEntryMutation } from "./api/entry";
 
 const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
 
@@ -103,36 +105,37 @@ const getOutgoersNested = (
 const AddNodeOnEdgeDrop = (props: {
   currentNodeId: string;
   runningNodeid: string;
-  checkboxState: unknown;
   onShowChart: (data: ChartData[]) => void;
 }) => {
   const queryClient = useQueryClient();
   const [nodes, setNodes, onNodesChange] = useNodesState<GrapNode>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
+  const entryMutation = useEntryMutation();
 
-  const fetchGraph = () => {
-    GraphApi.url("/graph")
-      .get()
-      .json((json) => {
-        const { nodes: layoutedNodes, edges: layoutedEdges } =
-          getLayoutedElements(
-            json.nodes.map((node: GrapNode) => {
-              return {
-                ...node,
-                type: "text-node",
-              };
-            }),
-            json.edges,
-            "LR",
-          );
-        setNodes(layoutedNodes);
-        setEdges(layoutedEdges);
-      });
-  };
+  const { data: graph, refetch: refetchGraph } = useQuery<Graph>({
+    queryKey: ["graph"],
+    queryFn: async () => {
+      return await GraphApi.url("/graph").get().json();
+    },
+  });
 
   useEffect(() => {
-    fetchGraph();
-  }, []);
+    if (graph) {
+      const { nodes: layoutedNodes, edges: layoutedEdges } =
+      getLayoutedElements(
+        graph.nodes.map((node: GrapNode) => {
+          return {
+            ...node,
+            type: "text-node",
+          };
+        }),
+        graph.edges,
+        "LR",
+      );
+    setNodes(layoutedNodes);
+    setEdges(layoutedEdges);
+    }
+  }, [graph])
 
   useEffect(() => {
     setNodes((nds) =>
@@ -142,7 +145,6 @@ const AddNodeOnEdgeDrop = (props: {
           data: {
             ...node.data,
             hightlight: node.id === props.currentNodeId,
-            isRunning: node.id === props.runningNodeid,
           },
         };
       }),
@@ -187,24 +189,6 @@ const AddNodeOnEdgeDrop = (props: {
       // TODO: update only label changed
       queryClient.invalidateQueries({ queryKey: ["entry"] });
       // fetchGraph();
-    },
-  });
-
-  const entryMutation = useMutation({
-    mutationFn: async (entry: EntryToCreate) => {
-      return await GraphApi.url("/entry")
-        .post({
-          nodeId: entry.nodeId,
-          duration: entry.duration,
-          startTime: entry.startTime,
-          stopTime: entry.stopTime,
-          data: props.checkboxState,
-        })
-        .json();
-    },
-    onSuccess: (data) => {
-      queryClient.setQueryData(["entry"], (old: Entry[]) => [data, ...old]);
-      fetchGraph();
     },
   });
 
@@ -297,7 +281,7 @@ const AddNodeOnEdgeDrop = (props: {
         GraphApi.url(`/node/${connectionState.fromNode.id}`)
           .post()
           .res(() => {
-            fetchGraph();
+            refetchGraph();
           });
 
         setNodes((nds) => nds.concat(newNode));
@@ -319,7 +303,7 @@ const AddNodeOnEdgeDrop = (props: {
             sourceId,
           })
           .res(() => {
-            fetchGraph();
+            refetchGraph();
           });
       }
     },
@@ -361,11 +345,11 @@ const Wrapper = () => {
 
   return (
     <div style={{ height: "100%", display: matches ? "flex" : "block" }}>
+      <TopTimer/>
       <div style={{ height: "60%", width: matches ? "50%" : "98%" }}>
         <ReactFlowProvider>
           <AddNodeOnEdgeDrop
             currentNodeId={nodeid}
-            checkboxState={checkboxState}
             onShowChart={(chart) => setChartData(chart)}
             runningNodeid={runningNodeid}
           />

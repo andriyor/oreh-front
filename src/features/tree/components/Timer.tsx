@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { NodeProps } from "@xyflow/react";
 
-import Stop from "../../../icons/stop-solid.svg";
 import Play from "../../../icons/play-solid.svg";
 import { formatSeconds } from "../../../helpers";
+import { useTimerStore } from "../../../store";
+import { TextNode } from "./types";
+
 
 export type Timer = {
   duration: number;
@@ -11,66 +13,28 @@ export type Timer = {
 };
 
 export const TimerApp = (props: {
-  isRunning?: boolean;
+  node: NodeProps<TextNode>;
   duration?: number;
   onStop: (time: Timer) => void;
 }) => {
-  const [totalTime, setTotalTime] = useState(0);
-  const [timeElapsed, setTimeElapsed] = useState(0);
-  const [isRunning, setIsRunning] = useState(false);
-  const [startTime, setStartTime] = useState("");
-
-  useEffect(() => {
-    setTotalTime(props.duration || 0);
-  }, [props.duration]);
-
-  useEffect(() => {
-    let timer: number;
-    if (isRunning) {
-      timer = setInterval(() => {
-        setTimeElapsed((prev) => prev + 1);
-      }, 1000);
-    }
-    return () => clearInterval(timer);
-  }, [isRunning]);
-
-  const stopTimer = () => {
-    props.onStop({
-      duration: timeElapsed,
-      startTime: startTime,
-      stopTime: new Date().toISOString(),
-    });
-    setTotalTime(timeElapsed + totalTime);
-    setTimeElapsed(0);
-    setIsRunning(false);
-  };
+  const setRunningNode = useTimerStore((state) => state.setRunningNode);
 
   const startTimer = () => {
-    setStartTime(new Date().toISOString());
-    setIsRunning(true);
+    setRunningNode({
+      id: props.node.id,
+      startTime: new Date().toISOString(),
+      label: props.node.data.label || "",
+    });
   };
-
-  useEffect(() => {
-    if (props.isRunning) {
-      startTimer();
-    }
-  }, [props.isRunning]);
 
   return (
     <div style={{ display: "flex" }}>
       <div style={{ marginRight: "10px" }}>
-        {isRunning ? (
-          <button onClick={stopTimer}>
-            <img src={Stop} height="15px" />
-          </button>
-        ) : (
-          <button onClick={startTimer}>
-            <img src={Play} height="15px" />
-          </button>
-        )}
+        <button onClick={startTimer}>
+          <img src={Play} height="15px" />
+        </button>
       </div>
-      <div className="mr-2">{formatSeconds(totalTime)}</div>
-      {isRunning && <div className="mr-3">C: {formatSeconds(timeElapsed)}</div>}
+      <div className="mr-2">{formatSeconds(props.duration || 0)}</div>
     </div>
   );
 };

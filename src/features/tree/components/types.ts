@@ -79,6 +79,7 @@ export type NodeDataToUpdate = NodeData & {
 export type Edge = {
   id: string;
   source: string;
+  target: string;
 };
 
 export type TextNode = Node<NodeData, "text-node">;

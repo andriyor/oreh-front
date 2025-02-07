@@ -85,7 +85,7 @@ export function TextUpdaterNode(props: NodeProps<TextNode>) {
         </div>
         <div>
           <TimerApp
-            isRunning={props.data.isRunning}
+            node={props}
             duration={props.data.commulativeDuration}
             onStop={handleStop}
           />
