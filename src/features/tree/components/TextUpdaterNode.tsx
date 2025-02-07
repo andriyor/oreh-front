@@ -7,6 +7,7 @@ import { Timer, TimerApp } from "./Timer";
 import DotsIcon from "../../../icons/ellipsis-v-solid.svg";
 import MinusIcon from "../../../icons/minus-solid.svg";
 import PlusIcon from "../../../icons/plus-solid.svg";
+import { useTimerStore } from "../../../store";
 
 export type TimeEntry = {
   time: number;
@@ -23,6 +24,7 @@ function debounce(func: Function, delay: number) {
 }
 
 export function TextUpdaterNode(props: NodeProps<TextNode>) {
+  const runningNode = useTimerStore((state) => state.runningNode);
   const [inputValue, setInputValue] = useState(props.data.label || "");
 
   const handleDebouncedChange = useCallback(
@@ -33,7 +35,7 @@ export function TextUpdaterNode(props: NodeProps<TextNode>) {
         label: value,
       });
     }, 500),
-    []
+    [],
   );
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,7 +61,10 @@ export function TextUpdaterNode(props: NodeProps<TextNode>) {
       style={{
         padding: "10px",
         border: "solid",
-        borderBlockColor: props.data.hightlight ? "red" : "black",
+        borderBlockColor:
+          props.data.hightlight || runningNode?.id === props.id
+            ? "red"
+            : "black",
       }}
     >
       <Handle type="target" position={Position.Left} />

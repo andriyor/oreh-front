@@ -11,9 +11,9 @@
     - [x] start timer from node
     - [x] show total time for node
     - [x] show time entries of node
+    - [x] highlight currentry running node
     - [ ] stop currenty running timer when pressing start
     - [ ] calculate total based on month/week/day
-    - [ ] highlight currentry running node
     - [ ] stop timer from node?
   - [ ] show/expand
     - [x] show/expand node
