@@ -47,10 +47,10 @@ export const TagValues = (props: {
   };
 
   return (
-    <div>
+    <div className="flex">
       {tags?.map((tag) => {
         return (
-          <div key={tag.id} className="flex mb-2">
+          <div key={tag.id} className="flex mb-2 mr-4">
             <div className="mr-2">{tag.label}</div>
             <div>
               {tag.type === "range" && (

@@ -347,8 +347,15 @@ const Wrapper = () => {
 
   return (
     <div style={{ height: "100%", display: matches ? "flex" : "block" }}>
-      <TopTimer />
-      <div style={{ height: "60%", width: matches ? "50%" : "98%" }}>
+      <div style={{ height: "50%", width: matches ? "50%" : "98%" }}>
+        <TopTimer />
+        <div className="p-5 border-1 rounded-md border-solid border-gray-600">
+          Current tags:
+          <TagValues
+            entryTags={checkboxState}
+            onChange={(state) => setCheckboxState(state)}
+          />
+        </div>
         <ReactFlowProvider>
           <AddNodeOnEdgeDrop
             currentNodeId={nodeid}
@@ -356,42 +363,38 @@ const Wrapper = () => {
             runningNodeid={runningNodeid}
           />
         </ReactFlowProvider>
+        <div>
+          <DoneToday />
+        </div>
+        <div className="m-5">
+          <HeatMap />
+        </div>
+        <div className="m-5 border-1 rounded-md border-solid border-gray-600">
+          Tag list:
+          <TagList />
+        </div>
+
+        <div className="m-5 marker:border-1 rounded-md border-solid border-gray-600">
+          chart by tags:
+          <ChartByTags />
+        </div>
+        <div className="m-5 border-1 rounded-md border-solid border-gray-600">
+          Chart by selected node:
+          {Boolean(chartData.length) && (
+            <div style={{ height: "350px" }}>
+              <VictoryPie data={chartData} theme={VictoryTheme.clean} />
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="flex m-5" style={{ width: matches ? "50%" : "98%" }}>
-        <div>
-          <div>
-            <DoneToday />
-          </div>
-          <div className="m-5">
-            <TagList />
-          </div>
-          <div className="p-5 border-1 rounded-md border-solid border-gray-600">
-            Current tags startTime:
-            <TagValues
-              entryTags={checkboxState}
-              onChange={(state) => setCheckboxState(state)}
-            />
-          </div>
-          <div>
-            <ChartByTags />
-          </div>
-        </div>
-        {Boolean(chartData.length) && (
-          <div style={{ height: "350px" }}>
-            <VictoryPie data={chartData} theme={VictoryTheme.clean} />
-          </div>
-        )}
-
         <div className="flex-1">
           <EntryList
             onClick={(id) => setNodeId(id)}
             onStartTimer={(id) => setRunningNodeId(id)}
           />
         </div>
-      </div>
-      <div className="m-5">
-        <HeatMap />
       </div>
     </div>
   );
