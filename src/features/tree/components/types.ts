@@ -1,4 +1,4 @@
-import type { Node, Position, NodeTypes, NodeProps } from "@xyflow/react";
+import type { Node, Position, NodeTypes, NodeProps, EdgeTypes } from "@xyflow/react";
 
 import { TextUpdaterNode } from "./TextUpdaterNode";
 
@@ -95,6 +95,9 @@ export const nodeTypes = {
   // Add any of your custom nodes here!
 } satisfies NodeTypes;
 
+export const edgeTypes = {
+  // Add your custom edge types here!
+} satisfies EdgeTypes;
 
 export type ChartData = {
   x: string;

@@ -21,11 +21,11 @@ import "@xyflow/react/dist/style.css";
 
 import {
   ChartData,
+  edgeTypes,
   GrapNode,
   nodeTypes,
 } from "../../tree/components/types";
 import { GraphApi } from "../../../api";
-import { edgeTypes } from "../../tree/components/edges";
 import { useDeleteNodeMutation } from "../../../api/node";
 import { useGraph } from "../../../api/graph";
 import { useTimerStore } from "../../../store";
