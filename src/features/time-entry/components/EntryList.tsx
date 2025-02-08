@@ -5,12 +5,13 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { EntryWithNode } from "../../tree/components/types";
 import { Entry } from "./Entry";
 import { GraphApi } from "../../../api";
+import { useTimerStore } from "../../../store";
 
 export const EntryList = (props: {
-  onClick: (id: string) => void;
   onStartTimer: (nodeId: string) => void;
 }) => {
   const queryClient = useQueryClient();
+  const setSelectedNodeId = useTimerStore((state) => state.setSelectedNodeId);
   const { data: entries } = useQuery<EntryWithNode[]>({
     queryKey: ["entry"],
     queryFn: async () => {
@@ -41,7 +42,7 @@ export const EntryList = (props: {
               <div
                 key={entry.id}
                 className="mb-3"
-                onClick={() => props.onClick(entry.node.id)}
+                onClick={() => setSelectedNodeId(entry.node.id)}
               >
                 <Entry
                   entry={entry}

@@ -85,7 +85,6 @@ const getOutgoersNested = (
 };
 
 export const GraphFlow = (props: {
-  currentNodeId: string;
   runningNodeid: string;
   onShowChart: (data: ChartData[]) => void;
 }) => {
@@ -117,20 +116,6 @@ export const GraphFlow = (props: {
       setEdges(layoutedEdges);
     }
   }, [graph]);
-
-  useEffect(() => {
-    setNodes((nds) =>
-      nds.map((node) => {
-        return {
-          ...node,
-          data: {
-            ...node.data,
-            hightlight: node.id === props.currentNodeId,
-          },
-        };
-      }),
-    );
-  }, [props.currentNodeId]);
 
   const { screenToFlowPosition } = useReactFlow();
 

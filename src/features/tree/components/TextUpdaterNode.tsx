@@ -30,6 +30,7 @@ export function TextUpdaterNode(props: NodeProps<TextNode>) {
   const [inputValue, setInputValue] = useState(props.data.label || "");
   const nodeDataMutation = useNodeDataMutation();
   const entryMutation = useEntryMutation();
+  const selectedNodeId = useTimerStore((state) => state.selectedNodeId);
 
   const handleDebouncedChange = useCallback(
     debounce((value: string) => {
@@ -57,7 +58,7 @@ export function TextUpdaterNode(props: NodeProps<TextNode>) {
       nodeIdToUpdate: props.id,
       ...props.data,
       isChecked: value,
-      doneAt: value? new Date() : null,
+      doneAt: value ? new Date() : null,
     });
   };
 
@@ -67,7 +68,7 @@ export function TextUpdaterNode(props: NodeProps<TextNode>) {
         padding: "10px",
         border: "solid",
         borderBlockColor:
-          props.data.hightlight || runningNode?.id === props.id
+          selectedNodeId === props.id || runningNode?.id === props.id
             ? "red"
             : "black",
       }}
