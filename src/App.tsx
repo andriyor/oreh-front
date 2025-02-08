@@ -46,6 +46,7 @@ import { HeatMap } from "./features/dashboard/components/HeatMap";
 import { ChartByTags } from "./features/tags/components/TagChart";
 import { TopTimer } from "./components/Timer";
 import { useEntryMutation } from "./api/entry";
+import { DoneToday } from "./features/dashboard/components/DoneToday";
 
 const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
 
@@ -122,20 +123,20 @@ const AddNodeOnEdgeDrop = (props: {
   useEffect(() => {
     if (graph) {
       const { nodes: layoutedNodes, edges: layoutedEdges } =
-      getLayoutedElements(
-        graph.nodes.map((node: GrapNode) => {
-          return {
-            ...node,
-            type: "text-node",
-          };
-        }),
-        graph.edges,
-        "LR",
-      );
-    setNodes(layoutedNodes);
-    setEdges(layoutedEdges);
+        getLayoutedElements(
+          graph.nodes.map((node: GrapNode) => {
+            return {
+              ...node,
+              type: "text-node",
+            };
+          }),
+          graph.edges,
+          "LR",
+        );
+      setNodes(layoutedNodes);
+      setEdges(layoutedEdges);
     }
-  }, [graph])
+  }, [graph]);
 
   useEffect(() => {
     setNodes((nds) =>
@@ -177,11 +178,12 @@ const AddNodeOnEdgeDrop = (props: {
 
   const updateNodeDataMutation = useMutation({
     mutationFn: async (nodeData: NodeDataToUpdate) => {
-      const { label, isChecked } = nodeData;
+      const { label, isChecked, doneAt } = nodeData;
       return await GraphApi.url(`/node/${nodeData.nodeIdToUpdate}`)
         .patch({
           label,
           isChecked,
+          doneAt,
         })
         .json();
     },
@@ -339,13 +341,13 @@ const Wrapper = () => {
   console.log("Wrapper");
   const [nodeid, setNodeId] = useState("");
   const [runningNodeid, setRunningNodeId] = useState("");
-  const matches = useMediaQuery("(min-width: 1300px)");
+  const matches = useMediaQuery("(min-width: 1500px)");
   const [chartData, setChartData] = useState<ChartData[]>([]);
   const [checkboxState, setCheckboxState] = useLocalStorage("tags-state", {});
 
   return (
     <div style={{ height: "100%", display: matches ? "flex" : "block" }}>
-      <TopTimer/>
+      <TopTimer />
       <div style={{ height: "60%", width: matches ? "50%" : "98%" }}>
         <ReactFlowProvider>
           <AddNodeOnEdgeDrop
@@ -358,6 +360,9 @@ const Wrapper = () => {
 
       <div className="flex m-5" style={{ width: matches ? "50%" : "98%" }}>
         <div>
+          <div>
+            <DoneToday />
+          </div>
           <div className="m-5">
             <TagList />
           </div>

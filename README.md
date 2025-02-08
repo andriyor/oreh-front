@@ -43,6 +43,8 @@
   - [ ] edit
   - [ ] delete
 - [ ] dashboard
+  - [x] nodes done by today
+    - [ ] show consumed time 
   - [ ] chart by node time
     - [x] basic chart
     - [ ] show percengage and time

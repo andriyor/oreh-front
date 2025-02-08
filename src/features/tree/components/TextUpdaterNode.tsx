@@ -53,6 +53,7 @@ export function TextUpdaterNode(props: NodeProps<TextNode>) {
       nodeIdToUpdate: props.id,
       ...props.data,
       isChecked: value,
+      doneAt: value? new Date() : null,
     });
   };
 

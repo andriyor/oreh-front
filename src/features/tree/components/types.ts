@@ -42,6 +42,7 @@ export type NodeDataDb = {
   time?: number;
   entry: Entry;
   isChecked?: boolean;
+  doneAt?: Date | null;
   // not stored properties
   commulativeDuration: number;
   totalTimeEntriersDuration: number;
