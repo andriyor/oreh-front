@@ -1,6 +1,5 @@
 import { ReactFlowProvider } from "@xyflow/react";
 import { useLocalStorage, useMediaQuery } from "usehooks-ts";
-import { useState } from "react";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { VictoryPie, VictoryTheme } from "victory";
@@ -14,12 +13,12 @@ import { HeatMap } from "./features/dashboard/components/HeatMap";
 import { ChartByTags } from "./features/tags/components/TagChart";
 import { TagList } from "./features/tags/components/Tags";
 import { EntryList } from "./features/time-entry/components/EntryList";
-import { ChartData } from "./features/tree/components/types";
+import { useTimerStore } from "./store";
 
 const Wrapper = () => {
   const matches = useMediaQuery("(min-width: 1500px)");
-  const [chartData, setChartData] = useState<ChartData[]>([]);
   const [checkboxState, setCheckboxState] = useLocalStorage("tags-state", {});
+  const chartData = useTimerStore((store) => store.chartData);
 
   return (
     <div style={{ height: "100%", display: matches ? "flex" : "block" }}>
@@ -33,9 +32,7 @@ const Wrapper = () => {
           />
         </div>
         <ReactFlowProvider>
-          <GraphFlow
-            onShowChart={(chart) => setChartData(chart)}
-          />
+          <GraphFlow/>
         </ReactFlowProvider>
         <div>
           <DoneToday />

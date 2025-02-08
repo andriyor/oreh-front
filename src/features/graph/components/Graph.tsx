@@ -28,6 +28,7 @@ import { GraphApi } from "../../../api";
 import { edgeTypes } from "../../tree/components/edges";
 import { useDeleteNodeMutation } from "../../../api/node";
 import { useGraph } from "../../../api/graph";
+import { useTimerStore } from "../../../store";
 
 const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
 
@@ -84,11 +85,11 @@ const getOutgoersNested = (
   return [...out, ...out.flatMap((n) => getOutgoersNested(n, nodes, edges))];
 };
 
-export const GraphFlow = (props: {
-  onShowChart: (data: ChartData[]) => void;
-}) => {
+export const GraphFlow = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState<GrapNode>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
+
+  const setChartData = useTimerStore((store) => store.setChartData);
 
   const deleteNodeMutation = useDeleteNodeMutation();
   const { data: graph, refetch: refetchGraph } = useGraph();
@@ -132,7 +133,7 @@ export const GraphFlow = (props: {
         y: n.data.totalTimeEntriersDuration,
       };
     });
-    props.onShowChart(chartData);
+    setChartData(chartData);
   };
 
   const hidden = useRef<string[]>([]);
