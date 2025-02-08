@@ -1,3 +1,3 @@
-TSX: 1017
-Total: 1310
+TSX: 1219
+Total: 1512
 TypeScript: 293
