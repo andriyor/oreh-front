@@ -12,7 +12,6 @@ export const useNodes = (range: { from: string; to: string }) => {
   });
 };
 
-
 export const useNodeDataMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -32,4 +31,18 @@ export const useNodeDataMutation = () => {
       // fetchGraph();
     },
   });
-} 
+};
+
+export const useDeleteNodeMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (nodes: GrapNode[]) => {
+      const firstNode = nodes[0];
+      return await GraphApi.url(`/node/${firstNode.id}`).delete().res();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["entry"] });
+      // fetchGraph();
+    },
+  });
+};

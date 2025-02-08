@@ -28,6 +28,7 @@ import {
 } from "../../tree/components/types";
 import { GraphApi } from "../../../api";
 import { edgeTypes } from "../../tree/components/edges";
+import { useDeleteNodeMutation } from "../../../api/node";
 
 const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
 
@@ -87,7 +88,7 @@ const getOutgoersNested = (
 export const GraphFlow = (props: {
   onShowChart: (data: ChartData[]) => void;
 }) => {
-  const queryClient = useQueryClient();
+  const deleteNodeMutation = useDeleteNodeMutation()
   const [nodes, setNodes, onNodesChange] = useNodesState<GrapNode>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
@@ -128,17 +129,6 @@ export const GraphFlow = (props: {
       ),
     [],
   );
-
-  const nodeDeleteMutation = useMutation({
-    mutationFn: async (nodes: GrapNode[]) => {
-      const firstNode = nodes[0];
-      return await GraphApi.url(`/node/${firstNode.id}`).delete().res();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["entry"] });
-      // fetchGraph();
-    },
-  });
 
   const showChart = (node: GrapNode) => {
     const out = getOutgoers(node, nodes, edges);
@@ -265,7 +255,7 @@ export const GraphFlow = (props: {
       edgeTypes={edgeTypes}
       onEdgesChange={onEdgesChange}
       onConnect={onConnect}
-      onNodesDelete={nodeDeleteMutation.mutate}
+      onNodesDelete={deleteNodeMutation.mutate}
       onConnectEnd={onConnectEnd}
       fitView
     >
