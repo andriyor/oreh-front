@@ -94,3 +94,9 @@ export const nodeTypes = {
   "text-node": TextUpdaterNode,
   // Add any of your custom nodes here!
 } satisfies NodeTypes;
+
+
+export type ChartData = {
+  x: string;
+  y: number;
+};
