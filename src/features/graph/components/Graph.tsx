@@ -16,19 +16,18 @@ import {
   Connection,
 } from "@xyflow/react";
 import dagre from "@dagrejs/dagre";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import "@xyflow/react/dist/style.css";
 
 import {
   ChartData,
-  Graph,
   GrapNode,
   nodeTypes,
 } from "../../tree/components/types";
 import { GraphApi } from "../../../api";
 import { edgeTypes } from "../../tree/components/edges";
 import { useDeleteNodeMutation } from "../../../api/node";
+import { useGraph } from "../../../api/graph";
 
 const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
 
@@ -88,16 +87,11 @@ const getOutgoersNested = (
 export const GraphFlow = (props: {
   onShowChart: (data: ChartData[]) => void;
 }) => {
-  const deleteNodeMutation = useDeleteNodeMutation()
   const [nodes, setNodes, onNodesChange] = useNodesState<GrapNode>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
-  const { data: graph, refetch: refetchGraph } = useQuery<Graph>({
-    queryKey: ["graph"],
-    queryFn: async () => {
-      return await GraphApi.url("/graph").get().json();
-    },
-  });
+  const deleteNodeMutation = useDeleteNodeMutation();
+  const { data: graph, refetch: refetchGraph } = useGraph();
 
   useEffect(() => {
     if (graph) {

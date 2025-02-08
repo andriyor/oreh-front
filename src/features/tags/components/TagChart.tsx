@@ -1,19 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
 import { get } from "lodash";
 import { useMemo, useState } from "react";
 import { VictoryPie, VictoryTheme } from "victory";
-import { EntryWithNode } from "../../tree/components/types";
-import { GraphApi } from "../../../api";
-import { Tags } from "./Tags";
+
+import { useEntries } from "../../../api/entry";
+import { useTags } from "../../../api/tags";
 
 export const ChartByTags = () => {
-  const [tag, setTag] = useState('');
-  const { data: entries } = useQuery<EntryWithNode[]>({
-    queryKey: ["entry"],
-    queryFn: async () => {
-      return await GraphApi.url("/entry").get().json();
-    },
-  });
+  const [tag, setTag] = useState("");
+  const { data: entries } = useEntries();
+  const { data: tags } = useTags();
 
   const groupEntries = (data: any, by: string, sum: string) => {
     const res = data?.reduce((accumulator, currentValue) => {
@@ -41,17 +36,9 @@ export const ChartByTags = () => {
     }
   }, [entries, tag]);
 
-  const { data: tags } = useQuery<Tags[]>({
-    queryKey: ["tags"],
-    queryFn: async () => {
-      return await GraphApi.url("/tags").get().json();
-    },
-  });
-
-
   const handleTagChange = (tag: string) => {
     setTag(tag);
-  }
+  };
 
   return (
     <div>

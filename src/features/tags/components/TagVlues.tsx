@@ -1,6 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
-import { GraphApi } from "../../../api";
 import { useState } from "react";
+
+import { useTags } from "../../../api/tags";
 
 type Tags = {
   id: string;
@@ -14,12 +14,7 @@ export const TagValues = (props: {
 }) => {
   const [state, setState] = useState(props.entryTags);
 
-  const { data: tags } = useQuery<Tags[]>({
-    queryKey: ["tags"],
-    queryFn: async () => {
-      return await GraphApi.url("/tags").get().json();
-    },
-  });
+  const { data: tags } = useTags();
 
   const ranges = [
     {

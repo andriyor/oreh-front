@@ -1,19 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
-import { GraphApi } from "../../../api";
-
-export type Tags = {
-  id: string;
-  label: string;
-  type: string;
-};
+import { useTags } from "../../../api/tags";
 
 export const TagList = () => {
-  const { data: tags } = useQuery<Tags[]>({
-    queryKey: ["tags"],
-    queryFn: async () => {
-      return await GraphApi.url("/tags").get().json();
-    },
-  });
+  const { data: tags } = useTags();
 
   return (
     <div>
