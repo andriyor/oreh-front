@@ -12,7 +12,6 @@
     - [x] show total time for node
     - [x] show time entries of node
     - [x] highlight currentry running node
-    - [ ] stop currenty running timer when pressing start
     - [ ] calculate total based on month/week/day
     - [ ] stop timer from node?
   - [ ] show/expand
@@ -21,6 +20,7 @@
     - [ ] hide show/expand button when no children
     - [ ] show/expand by nesting level?
   - [x] checkbox
+  - [x] hide done node
   - [x] change source of node
   - [ ] recurring task
   - [ ] goals
@@ -31,14 +31,14 @@
   - [x] edit
   - [x] highlight in tree
   - [x] srart
-  - [ ] post when started
   - [x] delete
-  - [ ] tags
+  - [x] tags
+  - [ ] store started time
   - [ ] only one timer can be runned at the same time
   - [ ] not refetch whole list after update of single entry
 - [ ] tags
   - [x] tags state
-  - [ ] store tags state
+  - [x] store tags state in local storage
   - [ ] create
   - [ ] edit
   - [ ] delete

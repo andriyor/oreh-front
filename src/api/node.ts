@@ -1,7 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { GraphApi } from "./index";
-import { GrapNode } from "../features/tree/components/types";
+import { GrapNode, NodeDataToUpdate } from "../features/tree/components/types";
 
 export const useNodes = (range: { from: string; to: string }) => {
   return useQuery<GrapNode[]>({
@@ -11,3 +11,25 @@ export const useNodes = (range: { from: string; to: string }) => {
     queryKey: ["node"],
   });
 };
+
+
+export const useNodeDataMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (nodeData: NodeDataToUpdate) => {
+      const { label, isChecked, doneAt } = nodeData;
+      return await GraphApi.url(`/node/${nodeData.nodeIdToUpdate}`)
+        .patch({
+          label,
+          isChecked,
+          doneAt,
+        })
+        .json();
+    },
+    onSuccess: () => {
+      // TODO: update only label changed
+      queryClient.invalidateQueries({ queryKey: ["entry"] });
+      // fetchGraph();
+    },
+  });
+} 

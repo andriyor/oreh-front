@@ -70,7 +70,6 @@ export type NodeData = NodeDataDb & {
   addTimeEntryToNode: (time: EntryToCreate) => void;
   toggleExpand: (nodeId: NodeProps<TextNode>) => void;
   showChart: (nodeId: NodeProps<TextNode>) => void;
-  updateNodeData: (nodeData: NodeDataToUpdate) => void;
 };
 
 export type NodeDataToUpdate = NodeData & {

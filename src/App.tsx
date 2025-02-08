@@ -47,6 +47,7 @@ import { ChartByTags } from "./features/tags/components/TagChart";
 import { TopTimer } from "./components/Timer";
 import { useEntryMutation } from "./api/entry";
 import { DoneToday } from "./features/dashboard/components/DoneToday";
+import { useNodeDataMutation } from "./api/node";
 
 const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
 
@@ -112,6 +113,7 @@ const AddNodeOnEdgeDrop = (props: {
   const [nodes, setNodes, onNodesChange] = useNodesState<GrapNode>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const entryMutation = useEntryMutation();
+  const nodeDataMutation = useNodeDataMutation();
 
   const { data: graph, refetch: refetchGraph } = useQuery<Graph>({
     queryKey: ["graph"],
@@ -176,24 +178,6 @@ const AddNodeOnEdgeDrop = (props: {
     },
   });
 
-  const updateNodeDataMutation = useMutation({
-    mutationFn: async (nodeData: NodeDataToUpdate) => {
-      const { label, isChecked, doneAt } = nodeData;
-      return await GraphApi.url(`/node/${nodeData.nodeIdToUpdate}`)
-        .patch({
-          label,
-          isChecked,
-          doneAt,
-        })
-        .json();
-    },
-    onSuccess: () => {
-      // TODO: update only label changed
-      queryClient.invalidateQueries({ queryKey: ["entry"] });
-      // fetchGraph();
-    },
-  });
-
   const showChart = (node: GrapNode) => {
     const out = getOutgoers(node, nodes, edges);
     const chartData: ChartData[] = out.map((n) => {
@@ -251,7 +235,6 @@ const AddNodeOnEdgeDrop = (props: {
       ...node,
       data: {
         ...node.data,
-        updateNodeData: updateNodeDataMutation.mutate,
         toggleExpand,
         showChart,
         addTimeEntryToNode: entryMutation.mutate,
@@ -338,7 +321,6 @@ type ChartData = {
 };
 
 const Wrapper = () => {
-  console.log("Wrapper");
   const [nodeid, setNodeId] = useState("");
   const [runningNodeid, setRunningNodeId] = useState("");
   const matches = useMediaQuery("(min-width: 1500px)");

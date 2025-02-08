@@ -8,6 +8,7 @@ import DotsIcon from "../../../icons/ellipsis-v-solid.svg";
 import MinusIcon from "../../../icons/minus-solid.svg";
 import PlusIcon from "../../../icons/plus-solid.svg";
 import { useTimerStore } from "../../../store";
+import { useNodeDataMutation } from "../../../api/node";
 
 export type TimeEntry = {
   time: number;
@@ -26,10 +27,11 @@ function debounce(func: Function, delay: number) {
 export function TextUpdaterNode(props: NodeProps<TextNode>) {
   const runningNode = useTimerStore((state) => state.runningNode);
   const [inputValue, setInputValue] = useState(props.data.label || "");
+  const nodeDataMutation = useNodeDataMutation();
 
   const handleDebouncedChange = useCallback(
     debounce((value: string) => {
-      props.data.updateNodeData({
+      nodeDataMutation.mutate({
         nodeIdToUpdate: props.id,
         ...props.data,
         label: value,
@@ -49,7 +51,7 @@ export function TextUpdaterNode(props: NodeProps<TextNode>) {
   };
 
   const onCheckboxChange = (value: boolean) => {
-    props.data.updateNodeData({
+    nodeDataMutation.mutate({
       nodeIdToUpdate: props.id,
       ...props.data,
       isChecked: value,

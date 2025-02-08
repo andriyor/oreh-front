@@ -36,11 +36,13 @@ export const TopTimer = () => {
       {runningNode && (
         <>
           <div className="mr-3">{runningNode.label}</div>
-          <div className="mr-3">{formatSeconds(timeElapsed)}</div>
-          <div>
-            <button onClick={stopTimer}>
-              <img src={Stop} height="15px" />
-            </button>
+          <div className="flex  ml-auto">
+            <div className="mr-3">{formatSeconds(timeElapsed)}</div>
+            <div>
+              <button onClick={stopTimer}>
+                <img src={Stop} height="15px" />
+              </button>
+            </div>
           </div>
         </>
       )}
