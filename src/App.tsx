@@ -30,12 +30,7 @@ import "@xyflow/react/dist/style.css";
 
 import { edgeTypes } from "./features/tree/components/edges";
 
-import {
-  Graph,
-  GrapNode,
-  NodeDataToUpdate,
-  nodeTypes,
-} from "./features/tree/components/types";
+import { Graph, GrapNode, nodeTypes } from "./features/tree/components/types";
 import { EntryList } from "./features/time-entry/components/EntryList";
 import { useLocalStorage, useMediaQuery } from "usehooks-ts";
 import { GraphApi } from "./api";
@@ -45,9 +40,7 @@ import { TagValues } from "./features/tags/components/TagVlues";
 import { HeatMap } from "./features/dashboard/components/HeatMap";
 import { ChartByTags } from "./features/tags/components/TagChart";
 import { TopTimer } from "./components/Timer";
-import { useEntryMutation } from "./api/entry";
 import { DoneToday } from "./features/dashboard/components/DoneToday";
-import { useNodeDataMutation } from "./api/node";
 
 const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
 
@@ -112,8 +105,6 @@ const AddNodeOnEdgeDrop = (props: {
   const queryClient = useQueryClient();
   const [nodes, setNodes, onNodesChange] = useNodesState<GrapNode>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
-  const entryMutation = useEntryMutation();
-  const nodeDataMutation = useNodeDataMutation();
 
   const { data: graph, refetch: refetchGraph } = useQuery<Graph>({
     queryKey: ["graph"],
@@ -237,7 +228,6 @@ const AddNodeOnEdgeDrop = (props: {
         ...node.data,
         toggleExpand,
         showChart,
-        addTimeEntryToNode: entryMutation.mutate,
       },
     };
   });

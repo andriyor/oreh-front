@@ -67,7 +67,6 @@ export type NodeData = NodeDataDb & {
   hightlight?: boolean;
   isCollapsed?: boolean;
   isRunning?: boolean;
-  addTimeEntryToNode: (time: EntryToCreate) => void;
   toggleExpand: (nodeId: NodeProps<TextNode>) => void;
   showChart: (nodeId: NodeProps<TextNode>) => void;
 };

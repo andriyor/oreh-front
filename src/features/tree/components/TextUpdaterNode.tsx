@@ -9,6 +9,7 @@ import MinusIcon from "../../../icons/minus-solid.svg";
 import PlusIcon from "../../../icons/plus-solid.svg";
 import { useTimerStore } from "../../../store";
 import { useNodeDataMutation } from "../../../api/node";
+import { useEntryMutation } from "../../../api/entry";
 
 export type TimeEntry = {
   time: number;
@@ -28,6 +29,7 @@ export function TextUpdaterNode(props: NodeProps<TextNode>) {
   const runningNode = useTimerStore((state) => state.runningNode);
   const [inputValue, setInputValue] = useState(props.data.label || "");
   const nodeDataMutation = useNodeDataMutation();
+  const entryMutation = useEntryMutation();
 
   const handleDebouncedChange = useCallback(
     debounce((value: string) => {
@@ -47,7 +49,7 @@ export function TextUpdaterNode(props: NodeProps<TextNode>) {
   };
 
   const handleStop = (time: Timer) => {
-    props.data.addTimeEntryToNode({ ...time, nodeId: props.id });
+    entryMutation.mutate({ ...time, nodeId: props.id });
   };
 
   const onCheckboxChange = (value: boolean) => {
