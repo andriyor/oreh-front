@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
-import { ChartData } from "./features/tree/components/types";
+import { ChartData } from "./features/graph/components/types";
 
 type RunningNode = {
   id: string;

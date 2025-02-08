@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { GraphApi } from "./index";
-import { GrapNode, NodeDataToUpdate } from "../features/tree/components/types";
+import { GrapNode, NodeDataToUpdate } from "../features/graph/components/types";
 
 export const useNodes = (range: { from: string; to: string }) => {
   return useQuery<GrapNode[]>({

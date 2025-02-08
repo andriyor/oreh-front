@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { GraphApi } from "./index";
-import { Graph } from "../features/tree/components/types";
+import { Graph } from "../features/graph/components/types";
 
 export const useGraph = () => {
   return useQuery<Graph>({

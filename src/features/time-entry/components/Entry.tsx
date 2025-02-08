@@ -4,7 +4,7 @@ import Play from "../../../icons/play-solid.svg";
 import TrashIcon from "../../../icons/trash-solid.svg";
 import DotsIcon from "../../../icons/ellipsis-v-solid.svg";
 
-import { EntryDatesWithNode, EntryWithNode } from "../../tree/components/types";
+import { EntryDatesWithNode, EntryWithNode } from "../../graph/components/types";
 import { Time } from "./Time";
 import { formatSeconds } from "../../../helpers";
 import { EntryTags } from "./EntryTags";

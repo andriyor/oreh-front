@@ -1,7 +1,7 @@
 import { format } from "date-fns";
 import { groupBy } from "lodash";
 
-import { EntryWithNode } from "../../tree/components/types";
+import { EntryWithNode } from "../../graph/components/types";
 import { Entry } from "./Entry";
 import { useTimerStore } from "../../../store";
 import { useEntries, useEntryDeleteMutation } from "../../../api/entry";

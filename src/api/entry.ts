@@ -6,7 +6,7 @@ import {
   EntryDatesWithNode,
   EntryToCreate,
   EntryWithNode,
-} from "../features/tree/components/types";
+} from "../features/graph/components/types";
 import { GraphApi } from "./index";
 
 export const useEntryMutation = () => {

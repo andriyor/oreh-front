@@ -24,7 +24,7 @@ import {
   edgeTypes,
   GrapNode,
   nodeTypes,
-} from "../../tree/components/types";
+} from "./types";
 import { GraphApi } from "../../../api";
 import { useDeleteNodeMutation } from "../../../api/node";
 import { useGraph } from "../../../api/graph";

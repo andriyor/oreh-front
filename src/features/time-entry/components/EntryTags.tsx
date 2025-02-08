@@ -12,7 +12,7 @@ import {
 } from "@floating-ui/react";
 import { useState } from "react";
 import { TagValues } from "../../tags/components/TagVlues";
-import { EntryDatesWithNode, EntryWithNode } from "../../tree/components/types";
+import { EntryDatesWithNode, EntryWithNode } from "../../graph/components/types";
 
 export const EntryTags = (props: {
   entry: EntryWithNode;
