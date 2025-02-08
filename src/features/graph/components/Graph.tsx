@@ -85,7 +85,6 @@ const getOutgoersNested = (
 };
 
 export const GraphFlow = (props: {
-  runningNodeid: string;
   onShowChart: (data: ChartData[]) => void;
 }) => {
   const queryClient = useQueryClient();

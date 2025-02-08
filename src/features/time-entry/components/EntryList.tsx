@@ -1,36 +1,28 @@
 import { format } from "date-fns";
 import { groupBy } from "lodash";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { EntryWithNode } from "../../tree/components/types";
 import { Entry } from "./Entry";
-import { GraphApi } from "../../../api";
 import { useTimerStore } from "../../../store";
+import { useEntries, useEntryDeleteMutation } from "../../../api/entry";
 
-export const EntryList = (props: {
-  onStartTimer: (nodeId: string) => void;
-}) => {
-  const queryClient = useQueryClient();
+export const EntryList = () => {
   const setSelectedNodeId = useTimerStore((state) => state.setSelectedNodeId);
-  const { data: entries } = useQuery<EntryWithNode[]>({
-    queryKey: ["entry"],
-    queryFn: async () => {
-      return await GraphApi.url("/entry").get().json();
-    },
-  });
-
-  const entryDeleteMutation = useMutation({
-    mutationFn: async (id: string) => {
-      return await GraphApi.url(`/entry/${id}`).delete().res();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["entry"] });
-    },
-  });
+  const setRunningNode = useTimerStore((state) => state.setRunningNode);
+  const entryDeleteMutation = useEntryDeleteMutation();
+  const { data: entries } = useEntries();
 
   const groupped = groupBy(entries, (entry) =>
     format(entry.startTime, "MM.dd"),
   );
+
+  const startTimer = (entry: EntryWithNode) => {
+    setRunningNode({
+      id: entry.node.id,
+      startTime: new Date().toISOString(),
+      label: entry.node.data.label || "",
+    });
+  };
 
   return (
     <div>
@@ -47,7 +39,7 @@ export const EntryList = (props: {
                 <Entry
                   entry={entry}
                   onDelete={() => entryDeleteMutation.mutate(entry.id)}
-                  onStartTimer={() => props.onStartTimer(entry.node.id)}
+                  onStartTimer={() => startTimer(entry)}
                 />
               </div>
             ))}

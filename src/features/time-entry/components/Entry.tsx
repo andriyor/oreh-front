@@ -1,34 +1,28 @@
 import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import Play from "../../../icons/play-solid.svg";
 import TrashIcon from "../../../icons/trash-solid.svg";
 import DotsIcon from "../../../icons/ellipsis-v-solid.svg";
 
 import { EntryDatesWithNode, EntryWithNode } from "../../tree/components/types";
-import { GraphApi } from "../../../api";
 import { Time } from "./Time";
 import { formatSeconds } from "../../../helpers";
 import { EntryTags } from "./EntryTags";
+import { useUpdateEntryMutation } from "../../../api/entry";
 
 export const Entry = (props: {
   entry: EntryWithNode;
   onStartTimer: () => void;
   onDelete: () => void;
 }) => {
-  const queryClient = useQueryClient();
   const [localEntry, setLocalEntry] = useState(props.entry);
+  const updateEntryMutation = useUpdateEntryMutation(props.entry.id);
 
-  const updateEntryMutation = useMutation({
-    mutationFn: async (entry: EntryDatesWithNode) => {
-      return await GraphApi.url(`/entry/${localEntry.id}`)
-        .put(entry)
-        .json((json) => setLocalEntry(json));
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["entry"] });
-    },
-  });
+  const handleUpdate =  (entry: EntryDatesWithNode) => {
+    updateEntryMutation.mutateAsync(entry).then(response => {
+      setLocalEntry(response);
+    })
+  }
 
   return (
     <div
@@ -44,12 +38,12 @@ export const Entry = (props: {
       </div>
 
       <div className="basis-4/12">
-        <EntryTags entry={props.entry} onUpdate={updateEntryMutation.mutate}/>
+        <EntryTags entry={props.entry} onUpdate={handleUpdate}/>
       </div>
 
       <div className="flex basis-4/12 justify-end">
         <div className="mr-3">
-          <Time entry={localEntry} onUpdate={updateEntryMutation.mutate} />
+          <Time entry={localEntry} onUpdate={handleUpdate} />
         </div>
         <div className="mr-3">{formatSeconds(localEntry.duration)}</div>
       </div>

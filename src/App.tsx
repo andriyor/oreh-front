@@ -17,7 +17,6 @@ import { EntryList } from "./features/time-entry/components/EntryList";
 import { ChartData } from "./features/tree/components/types";
 
 const Wrapper = () => {
-  const [runningNodeid, setRunningNodeId] = useState("");
   const matches = useMediaQuery("(min-width: 1500px)");
   const [chartData, setChartData] = useState<ChartData[]>([]);
   const [checkboxState, setCheckboxState] = useLocalStorage("tags-state", {});
@@ -36,7 +35,6 @@ const Wrapper = () => {
         <ReactFlowProvider>
           <GraphFlow
             onShowChart={(chart) => setChartData(chart)}
-            runningNodeid={runningNodeid}
           />
         </ReactFlowProvider>
         <div>
@@ -66,9 +64,7 @@ const Wrapper = () => {
 
       <div className="flex m-5" style={{ width: matches ? "50%" : "98%" }}>
         <div className="flex-1">
-          <EntryList
-            onStartTimer={(id) => setRunningNodeId(id)}
-          />
+          <EntryList/>
         </div>
       </div>
     </div>
