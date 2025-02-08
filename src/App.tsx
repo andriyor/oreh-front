@@ -303,9 +303,9 @@ declare module '@tanstack/react-router' {
 
 export default () => (
   <QueryClientProvider client={queryClient}>
-    <Wrapper/>
+    {/* <Wrapper/> */}
     {/* <MiniDrawer /> */}
-    {/* <RouterProvider router={router} /> */}
+    <RouterProvider router={router} />
     <ReactQueryDevtools initialIsOpen={false} />
   </QueryClientProvider>
 );
