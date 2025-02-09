@@ -33,7 +33,7 @@ export const TopTimer = () => {
 
   return (
     <div className="flex p-3">
-      {runningNode && (
+      {runningNode ? (
         <>
           <div className="mr-3">{runningNode.label}</div>
           <div className="flex  ml-auto">
@@ -45,6 +45,8 @@ export const TopTimer = () => {
             </div>
           </div>
         </>
+      ) : (
+        <div>No currently running timer</div>
       )}
     </div>
   );

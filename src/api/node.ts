@@ -26,7 +26,8 @@ export const useNodeDataMutation = () => {
         .json();
     },
     onSuccess: () => {
-      // TODO: update only label changed
+      queryClient.invalidateQueries({ queryKey: ["node"] });
+      // TODO: invalidate only for label changes and not checkbox
       queryClient.invalidateQueries({ queryKey: ["entry"] });
       // fetchGraph();
     },
