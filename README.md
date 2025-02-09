@@ -27,21 +27,24 @@
   - [ ] habbits positive/negative
   - [ ] priority
   - [ ] change color of node
+  - [ ] store node created time
 - [ ] time entry
   - [x] edit
   - [x] highlight in tree
   - [x] srart
   - [x] delete
   - [x] tags
-  - [ ] store started time
+  - [x] group by day
+  - [x] total time by day
   - [ ] only one timer can be runned at the same time
   - [ ] not refetch whole list after update of single entry
 - [ ] tags
   - [x] tags state
   - [x] store tags state in local storage
-  - [ ] create
-  - [ ] edit
-  - [ ] delete
+  - [x] create
+  - [x] edit
+  - [x] delete
+  - [ ] change type
 - [ ] dashboard
   - [x] nodes done by today
     - [ ] show consumed time 
@@ -58,7 +61,7 @@
   - [ ] better style
 - [ ] calendat
   - [ ] for time enries
-  - [ ] for compleated tasks in day
+  - [x] for compleated tasks in day
 - [ ] auth
 - [ ] task for week/month/day
 
