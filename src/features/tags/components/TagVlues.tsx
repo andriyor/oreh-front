@@ -2,17 +2,12 @@ import { useState } from "react";
 
 import { useTags } from "../../../api/tags";
 
-type Tags = {
-  id: string;
-  label: string;
-  type: string;
-};
-
 export const TagValues = (props: {
+  isHorizontal: boolean;
   entryTags: Record<string, string>;
   onChange: (value: Record<string, string>) => void;
 }) => {
-  const [state, setState] = useState(props.entryTags);
+  const [entryTags, setEntryTags] = useState(props.entryTags);
 
   const { data: tags } = useTags();
 
@@ -36,45 +31,37 @@ export const TagValues = (props: {
   ];
 
   const handleSelectChange = (label: string, value: string) => {
-    const newState = { ...state, ...{ [label]: value } };
-    setState(newState);
+    const newState = { ...entryTags, ...{ [label]: value } };
+    setEntryTags(newState);
     props.onChange(newState);
   };
 
   return (
-    <div className="flex">
-      {tags?.map((tag) => {
-        return (
-          <div key={tag.id} className="flex mb-2 mr-4">
-            <div className="mr-2">{tag.label}</div>
-            <div>
-              {tag.type === "range" && (
-                <div>
-                  <select
-                    name="range"
-                    id="range"
-                    onChange={(e) =>
-                      handleSelectChange(tag.label, e.target.value)
-                    }
+    <div className={props.isHorizontal ? 'flex' : ''} >
+      {tags?.map((tag) => (
+        <div key={tag.id} className="flex mb-2 mr-4">
+          <div className="mr-2">{tag.label}</div>
+          <div className="ml-auto">
+            {tag.type === "range" && (
+              <select
+                name="range"
+                id="range"
+                onChange={(e) => handleSelectChange(tag.label, e.target.value)}
+              >
+                {ranges.map((r) => (
+                  <option
+                    selected={props.entryTags[tag.label] === r.value}
+                    key={r.value}
+                    value={r.value}
                   >
-                    {ranges.map((r) => {
-                      return (
-                        <option
-                          selected={props.entryTags[tag.label] === r.value}
-                          key={r.value}
-                          value={r.value}
-                        >
-                          {r.label}
-                        </option>
-                      );
-                    })}
-                  </select>
-                </div>
-              )}
-            </div>
+                    {r.label}
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
-        );
-      })}
+        </div>
+      ))}
     </div>
   );
 };

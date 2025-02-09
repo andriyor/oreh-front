@@ -19,7 +19,6 @@ export const EntryTags = (props: {
   onUpdate: (entry: EntryDatesWithNode) => void;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  // const currentTags = useRef(props.entry.data);
   const [tags, setTags] = useState(props.entry.data);
   console.log('tags', tags)
 

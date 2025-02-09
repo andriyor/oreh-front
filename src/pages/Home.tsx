@@ -23,6 +23,7 @@ export const Home = () => {
         <div className="mb-4 p-5 border-1 rounded-md border-solid border-gray-600">
           Current tags:
           <TagValues
+            isHorizontal={true}
             entryTags={checkboxState}
             onChange={(state) => setCheckboxState(state)}
           />
