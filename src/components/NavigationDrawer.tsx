@@ -1,5 +1,7 @@
 import React from "react";
-import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
+import { Link, Outlet } from "@tanstack/react-router";
+
+import { styled, Theme, CSSObject } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
@@ -7,14 +9,14 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
-import { Link, Outlet } from "@tanstack/react-router";
+
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import HomeIcon from "@mui/icons-material/Home";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 
 const drawerWidth = 240;
 
@@ -73,8 +75,33 @@ const Drawer = styled(MuiDrawer, {
   ],
 }));
 
+type NavItem = {
+  to: string;
+  label: string;
+  icon: React.ReactNode;
+};
+
+const navItems: NavItem[] = [
+  {
+    to: "",
+    label: "Home",
+    icon: <HomeIcon />,
+  },
+  {
+    to: "tag",
+    label: "Tags",
+    icon: <LocalOfferIcon />,
+  },
+  {
+    to: "calendar",
+    label: "Calendar",
+    icon: <CalendarMonthIcon />,
+  },
+];
+
+// https://mui.com/material-ui/react-drawer/#mini-variant-drawer
+
 export const NavigationDrawer = () => {
-  const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {
@@ -85,23 +112,13 @@ export const NavigationDrawer = () => {
     setOpen(false);
   };
 
-  const navItems = [
-    { to: "", label: "Home" },
-    { to: "tag", label: "Tags" },
-    { to: "calendar", label: "Calendar" },
-  ];
-
   return (
     <Box sx={{ display: "flex" }}>
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
           {open ? (
             <IconButton onClick={handleDrawerClose}>
-              {theme.direction === "rtl" ? (
-                <ChevronRightIcon />
-              ) : (
-                <ChevronLeftIcon />
-              )}
+              <ChevronLeftIcon />
             </IconButton>
           ) : (
             <IconButton
@@ -116,7 +133,7 @@ export const NavigationDrawer = () => {
         </DrawerHeader>
         <Divider />
         <List>
-          {navItems.map((item, index) => (
+          {navItems.map((item) => (
             <ListItem key={item.label} disablePadding sx={{ display: "block" }}>
               <ListItemButton
                 component={Link}
@@ -126,44 +143,20 @@ export const NavigationDrawer = () => {
                     minHeight: 48,
                     px: 2.5,
                   },
-                  open
-                    ? {
-                        justifyContent: "initial",
-                      }
-                    : {
-                        justifyContent: "center",
-                      },
                 ]}
               >
                 <ListItemIcon
                   sx={[
                     {
                       minWidth: 0,
+                      mr: 3,
                       justifyContent: "center",
                     },
-                    open
-                      ? {
-                          mr: 3,
-                        }
-                      : {
-                          mr: "auto",
-                        },
                   ]}
                 >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  {item.icon}
                 </ListItemIcon>
-                <ListItemText
-                  primary={item.label}
-                  sx={[
-                    open
-                      ? {
-                          opacity: 1,
-                        }
-                      : {
-                          opacity: 0,
-                        },
-                  ]}
-                />
+                <ListItemText primary={item.label} />
               </ListItemButton>
             </ListItem>
           ))}
