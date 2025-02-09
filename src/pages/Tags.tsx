@@ -21,6 +21,7 @@ export const TagPage = () => {
       label: value,
       type: "range",
     });
+    setValue("");
   };
 
   const handleDelete = (tagId: string) => {
@@ -36,6 +37,12 @@ export const TagPage = () => {
     }, 500),
     [],
   );
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleAddtag();
+    }
+  };
 
   return (
     <div>
@@ -58,7 +65,12 @@ export const TagPage = () => {
       })}
       <div className="flex">
         <div className="mr-2">
-          <input type="text" onChange={(e) => setValue(e.target.value)} />
+          <input
+            type="text"
+            value={value}
+            onKeyDown={handleKeyDown}
+            onChange={(e) => setValue(e.target.value)}
+          />
         </div>
         <div>
           <button onClick={handleAddtag}>add</button>
