@@ -11,22 +11,33 @@ import {
   useRole,
 } from "@floating-ui/react";
 import { useState } from "react";
+
 import { TagValues } from "../../tags/components/TagVlues";
-import { EntryDatesWithNode, EntryWithNode } from "../../graph/components/types";
+import {
+  EntryDatesWithNode,
+  EntryWithNode,
+} from "../../graph/components/types";
+import { TagDb, useTags } from "../../../api/tags";
+import { tagIcons } from "../../tags/types";
 
 export const EntryTags = (props: {
   entry: EntryWithNode;
   onUpdate: (entry: EntryDatesWithNode) => void;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [tags, setTags] = useState(props.entry.data);
-  console.log('tags', tags)
+  const [entryTags, setEntryTags] = useState(props.entry.data);
+  const { data: tags } = useTags();
+
+  const tagsMap = tags?.reduce<Record<string, TagDb>>((acc, curr) => {
+    acc[curr.id] = curr;
+    return acc;
+  }, {});
 
   const onOpenChange = (isCurrentlyOpen: boolean) => {
     setIsOpen(isCurrentlyOpen);
 
     if (!isCurrentlyOpen) {
-      props.onUpdate({ data: tags });
+      props.onUpdate({ data: entryTags });
     }
   };
 
@@ -55,11 +66,20 @@ export const EntryTags = (props: {
   return (
     <>
       <div className="flex" ref={refs.setReference} {...getReferenceProps()}>
-        {Object.entries(props.entry.data).map(([key, val]) => (
-          <div className="mr-1" key={key}>
-            {key}: {val}
-          </div>
-        ))}
+        {tagsMap &&
+          Object.entries(props.entry.data).map(([id, val]) => {
+            const tagLabel = tagsMap[id]?.label;
+            return (
+              <>
+                {tagLabel && (
+                  <div className="flex mr-4" key={id}>
+                    <div>{tagsMap[id]?.label}:</div>
+                    <div>{tagIcons[val]}</div>
+                  </div>
+                )}
+              </>
+            );
+          })}
       </div>
       {isOpen && (
         <FloatingFocusManager context={context} modal={false}>
@@ -69,7 +89,10 @@ export const EntryTags = (props: {
             style={{ ...floatingStyles, backgroundColor: "white" }}
             {...getFloatingProps()}
           >
-            <TagValues entryTags={tags} onChange={(tags) => setTags(tags)} />
+            <TagValues
+              entryTags={entryTags}
+              onChange={(tags) => setEntryTags(tags)}
+            />
           </div>
         </FloatingFocusManager>
       )}

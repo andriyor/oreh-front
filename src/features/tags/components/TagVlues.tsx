@@ -1,43 +1,27 @@
 import { useState } from "react";
 
-import { useTags } from "../../../api/tags";
+import { TagDb, useTags } from "../../../api/tags";
+import { ranges } from "../types";
+
+
 
 export const TagValues = (props: {
-  isHorizontal: boolean;
+  isHorizontal?: boolean;
   entryTags: Record<string, string>;
   onChange: (value: Record<string, string>) => void;
 }) => {
-  const [entryTags, setEntryTags] = useState(props.entryTags);
+  const [currentTags, setCurrentTags] = useState(props.entryTags);
 
   const { data: tags } = useTags();
 
-  const ranges = [
-    {
-      value: "mid",
-      label: "Mid",
-    },
-    {
-      value: "moderate",
-      label: "Moderate",
-    },
-    {
-      value: "severe",
-      label: "Severe",
-    },
-    {
-      value: "unbeatable",
-      label: "Unbeatable",
-    },
-  ];
-
-  const handleSelectChange = (label: string, value: string) => {
-    const newState = { ...entryTags, ...{ [label]: value } };
-    setEntryTags(newState);
+  const handleSelectChange = (tag: TagDb, value: string) => {
+    const newState = { ...currentTags, ...{ [tag.id]: value } };
+    setCurrentTags(newState);
     props.onChange(newState);
   };
 
   return (
-    <div className={props.isHorizontal ? 'flex' : ''} >
+    <div className={props.isHorizontal ? "flex" : ""}>
       {tags?.map((tag) => (
         <div key={tag.id} className="flex mb-2 mr-4">
           <div className="mr-2">{tag.label}</div>
@@ -46,15 +30,15 @@ export const TagValues = (props: {
               <select
                 name="range"
                 id="range"
-                onChange={(e) => handleSelectChange(tag.label, e.target.value)}
+                onChange={(e) => handleSelectChange(tag, e.target.value)}
               >
-                {ranges.map((r) => (
+                {ranges.map((range) => (
                   <option
-                    selected={props.entryTags[tag.label] === r.value}
-                    key={r.value}
-                    value={r.value}
+                    selected={props.entryTags[tag.label] === range.value}
+                    key={range.value}
+                    value={range.value}
                   >
-                    {r.label}
+                    {range.label}
                   </option>
                 ))}
               </select>
