@@ -23,7 +23,7 @@ export const Home = () => {
           Current tags:
           <TagValues
             isHorizontal={true}
-            entryTags={checkboxState}
+            currentTags={checkboxState}
             onChange={(state) => setCheckboxState(state)}
           />
         </div>

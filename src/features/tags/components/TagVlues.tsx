@@ -3,14 +3,12 @@ import { useState } from "react";
 import { TagDb, useTags } from "../../../api/tags";
 import { ranges } from "../types";
 
-
-
 export const TagValues = (props: {
   isHorizontal?: boolean;
-  entryTags: Record<string, string>;
+  currentTags: Record<string, string>;
   onChange: (value: Record<string, string>) => void;
 }) => {
-  const [currentTags, setCurrentTags] = useState(props.entryTags);
+  const [currentTags, setCurrentTags] = useState(props.currentTags);
 
   const { data: tags } = useTags();
 
@@ -34,7 +32,7 @@ export const TagValues = (props: {
               >
                 {ranges.map((range) => (
                   <option
-                    selected={props.entryTags[tag.label] === range.value}
+                    selected={props.currentTags[tag.id] === range.value}
                     key={range.value}
                     value={range.value}
                   >

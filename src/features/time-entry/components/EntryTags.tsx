@@ -90,7 +90,7 @@ export const EntryTags = (props: {
             {...getFloatingProps()}
           >
             <TagValues
-              entryTags={entryTags}
+              currentTags={entryTags}
               onChange={(tags) => setEntryTags(tags)}
             />
           </div>
