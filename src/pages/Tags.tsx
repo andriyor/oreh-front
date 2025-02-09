@@ -46,6 +46,7 @@ export const TagPage = () => {
 
   return (
     <div>
+      Tags:
       {tags?.map((tag) => {
         return (
           <div key={tag.id} className="flex mb-2">

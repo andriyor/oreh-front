@@ -88,14 +88,14 @@ const navItems: NavItem[] = [
     icon: <HomeIcon />,
   },
   {
-    to: "tag",
-    label: "Tags",
-    icon: <LocalOfferIcon />,
-  },
-  {
     to: "calendar",
     label: "Calendar",
     icon: <CalendarMonthIcon />,
+  },
+  {
+    to: "tag",
+    label: "Tags",
+    icon: <LocalOfferIcon />,
   },
 ];
 

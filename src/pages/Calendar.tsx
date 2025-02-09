@@ -48,6 +48,7 @@ export const NodeCalendar = () => {
 
   return (
     <div>
+      <div className="mb-4">Calendar with tasks done in day:</div>
       <Calendar
         localizer={localizer}
         events={events}
