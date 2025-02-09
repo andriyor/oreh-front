@@ -199,7 +199,7 @@ export const GraphFlow = () => {
       fitView
     >
       <Background />
-      <MiniMap />
+      {/* <MiniMap /> */}
       <Controls />
     </ReactFlow>
   );

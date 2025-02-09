@@ -10,20 +10,13 @@ import PlusIcon from "../../../icons/plus-solid.svg";
 import { useTimerStore } from "../../../store";
 import { useNodeDataMutation } from "../../../api/node";
 import { useEntryMutation } from "../../../api/entry";
+import { debounce } from "../../../helpers";
 
 export type TimeEntry = {
   time: number;
   startTime: string;
   stopTime: string;
 };
-
-function debounce(func: Function, delay: number) {
-  let timeout: number;
-  return (...args: any) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func(...args), delay);
-  };
-}
 
 export function TextUpdaterNode(props: NodeProps<TextNode>) {
   const runningNode = useTimerStore((state) => state.runningNode);

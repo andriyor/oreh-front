@@ -22,6 +22,7 @@ import { ChartByTags } from "./features/tags/components/TagChart";
 import { TagList } from "./features/tags/components/Tags";
 import { EntryList } from "./features/time-entry/components/EntryList";
 import { useTimerStore } from "./store";
+import { TagPage } from "./pages/Tags";
 
 const Wrapper = () => {
   const matches = useMediaQuery("(min-width: 1500px)");
@@ -30,9 +31,9 @@ const Wrapper = () => {
 
   return (
     <div style={{ height: "100%", display: matches ? "flex" : "block" }}>
-      <div style={{ height: "50%", width: matches ? "50%" : "98%" }}>
+      <div style={{ height: "60%", width: matches ? "50%" : "98%" }}>
         <TopTimer />
-        <div className="p-5 border-1 rounded-md border-solid border-gray-600">
+        <div className="mb-4 p-5 border-1 rounded-md border-solid border-gray-600">
           Current tags:
           <TagValues
             entryTags={checkboxState}
@@ -95,15 +96,23 @@ const indexRoute = createRoute({
   },
 });
 
-const aboutRoute = createRoute({
+const tagsRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/about",
+  path: "/tag",
   component: function About() {
-    return <div className="p-2">Hello from About!</div>;
+    return <TagPage/>
   },
 });
 
-const routeTree = rootRoute.addChildren([indexRoute, aboutRoute]);
+const calendarRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/calendar",
+  component: function About() {
+    return <div>Calendar</div>
+  },
+});
+
+const routeTree = rootRoute.addChildren([indexRoute, tagsRoute, calendarRoute]);
 
 const router = createRouter({ routeTree });
 

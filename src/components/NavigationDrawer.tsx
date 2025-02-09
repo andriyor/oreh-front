@@ -87,7 +87,8 @@ export const NavigationDrawer = () => {
 
   const navItems = [
     { to: "", label: "Home" },
-    { to: "about", label: "About" },
+    { to: "tag", label: "Tags" },
+    { to: "calendar", label: "Calendar" },
   ];
 
   return (
