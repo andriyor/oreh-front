@@ -8,7 +8,7 @@ export const useNodes = (range: { from: string; to: string }) => {
     queryFn: async () => {
       return await GraphApi.url("/node").query(range).get().json();
     },
-    queryKey: ["node"],
+    queryKey: ["node", range],
   });
 };
 
