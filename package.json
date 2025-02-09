@@ -39,6 +39,7 @@
     "@tanstack/router-plugin": "^1.99.14",
     "@types/lodash": "^4.17.14",
     "@types/react": "^18.2.53",
+    "@types/react-big-calendar": "^1.16.1",
     "@types/react-dom": "^18.2.18",
     "@typescript-eslint/eslint-plugin": "^6.20.0",
     "@typescript-eslint/parser": "^6.20.0",

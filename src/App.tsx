@@ -11,6 +11,7 @@ import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { NavigationDrawer } from "./components/NavigationDrawer";
 import { TagPage } from "./pages/Tags";
 import { Home } from "./pages/Home";
+import { NodeCalendar } from "./pages/Calendar";
 
 const queryClient = new QueryClient();
 
@@ -26,25 +27,19 @@ const rootRoute = createRootRoute({
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/",
-  component: function Index() {
-    return <Home />;
-  },
+  component: Home,
 });
 
 const tagsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/tag",
-  component: function About() {
-    return <TagPage />;
-  },
+  component: TagPage,
 });
 
 const calendarRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/calendar",
-  component: function About() {
-    return <div>Calendar</div>;
-  },
+  component: NodeCalendar,
 });
 
 const routeTree = rootRoute.addChildren([indexRoute, tagsRoute, calendarRoute]);
