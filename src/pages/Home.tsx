@@ -7,7 +7,6 @@ import { DoneToday } from "../features/dashboard/components/DoneToday";
 import { HeatMap } from "../features/dashboard/components/HeatMap";
 import { GraphFlow } from "../features/graph/components/Graph";
 import { ChartByTags } from "../features/tags/components/TagChart";
-import { TagList } from "../features/tags/components/Tags";
 import { TagValues } from "../features/tags/components/TagVlues";
 import { EntryList } from "../features/time-entry/components/EntryList";
 import { useTimerStore } from "../store";
@@ -36,10 +35,6 @@ export const Home = () => {
         </div>
         <div className="m-5">
           <HeatMap />
-        </div>
-        <div className="m-5 border-1 rounded-md border-solid border-gray-600">
-          Tag list:
-          <TagList />
         </div>
 
         <div className="m-5 marker:border-1 rounded-md border-solid border-gray-600">
