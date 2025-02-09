@@ -4,8 +4,8 @@ import {
   parse,
   startOfWeek,
   getDay,
-  setDate,
-  lastDayOfMonth,
+  startOfMonth,
+  endOfMonth,
 } from "date-fns";
 import { enUS } from "date-fns/locale";
 import { Calendar, dateFnsLocalizer } from "react-big-calendar";
@@ -33,8 +33,8 @@ export const NodeCalendar = () => {
   };
 
   const { data } = useNodes({
-    from: format(setDate(currentDate, 1), "yyyy-MM-dd"),
-    to: format(lastDayOfMonth(currentDate), "yyyy-MM-dd"),
+    from: startOfMonth(currentDate).toISOString(),
+    to: endOfMonth(currentDate).toISOString(),
   });
 
   const events = data?.map((event) => {

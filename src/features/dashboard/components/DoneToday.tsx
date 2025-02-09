@@ -1,20 +1,22 @@
-import { format } from "date-fns";
+import { endOfDay, startOfDay } from "date-fns";
 
-import { useNodes } from "../../../api/node";
+import { useAggregatedNodes } from "../../../api/node";
+import { formatSeconds } from "../../../helpers";
 
 export const DoneToday = () => {
-  const today = format(new Date(), "yyyy-MM-dd");
-  const { data } = useNodes({
-    from: today,
-    to: today,
+  const now = new Date();
+  const { data } = useAggregatedNodes({
+    from: startOfDay(now).toISOString(),
+    to: endOfDay(now).toISOString(),
   });
 
   return (
-    <div className="border-1 rounded-md border-solid border-gray-600">
+    <div className="p-3 border-1 rounded-md border-solid border-gray-600">
       Done Today:
       {data?.map((node) => (
-        <div className="mb-2" key={node.id}>
-          {node.data.label}
+        <div className="flex mb-2 " key={node.id}>
+          <div>{node.data.label}</div>
+          <div className="ml-auto">{formatSeconds(node.totalDuration)}</div>
         </div>
       ))}
     </div>

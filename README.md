@@ -47,7 +47,7 @@
   - [ ] change type
 - [ ] dashboard
   - [x] nodes done by today
-    - [ ] show consumed time 
+    - [x] show consumed time 
   - [ ] chart by node time
     - [x] basic chart
     - [ ] show percengage and time

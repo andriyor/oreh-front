@@ -12,6 +12,15 @@ export const useNodes = (range: { from: string; to: string }) => {
   });
 };
 
+export const useAggregatedNodes = (range: { from: string; to: string }) => {
+  return useQuery<GrapNode[]>({
+    queryFn: async () => {
+      return await GraphApi.url("/node/aggregated").query(range).get().json();
+    },
+    queryKey: ["node", range],
+  });
+};
+
 export const useNodeDataMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({

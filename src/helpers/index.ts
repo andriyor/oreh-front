@@ -1,7 +1,7 @@
 import { format, startOfDay, addSeconds } from "date-fns";
 
 export const formatSeconds = (seconds: number) => {
-  const date = addSeconds(startOfDay(new Date(0)), seconds);
+  const date = addSeconds(startOfDay(new Date()), seconds);
   return format(date, "HH:mm:ss");
 };
 
