@@ -73,7 +73,7 @@ export const EntryTags = (props: {
               <>
                 {tagLabel && (
                   <div className="flex mr-4" key={id}>
-                    <div>{tagsMap[id]?.label}:</div>
+                    <div>{tagLabel}:</div>
                     <div>{tagIcons[val]}</div>
                   </div>
                 )}

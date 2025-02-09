@@ -1,5 +1,5 @@
 import { ReactFlowProvider } from "@xyflow/react";
-import { useLocalStorage, useMediaQuery } from "usehooks-ts";
+import { useLocalStorage } from "usehooks-ts";
 import { VictoryPie, VictoryTheme } from "victory";
 
 import { TopTimer } from "../components/Timer";
@@ -12,13 +12,12 @@ import { EntryList } from "../features/time-entry/components/EntryList";
 import { useTimerStore } from "../store";
 
 export const Home = () => {
-  const matches = useMediaQuery("(min-width: 1500px)");
   const [checkboxState, setCheckboxState] = useLocalStorage("tags-state", {});
   const chartData = useTimerStore((store) => store.chartData);
 
   return (
-    <div style={{ height: "100%", display: matches ? "flex" : "block" }}>
-      <div style={{ height: "60%", width: matches ? "50%" : "98%" }}>
+    <div className="flex flex-row">
+      <div className="basis-6/12">
         <TopTimer />
         <div className="mb-4 p-5 border-1 rounded-md border-solid border-gray-600">
           Current tags:
@@ -28,9 +27,12 @@ export const Home = () => {
             onChange={(state) => setCheckboxState(state)}
           />
         </div>
-        <ReactFlowProvider>
-          <GraphFlow />
-        </ReactFlowProvider>
+        <div style={{ height: "600px" }}>
+          <ReactFlowProvider>
+            <GraphFlow />
+          </ReactFlowProvider>
+        </div>
+
         <div>
           <DoneToday />
         </div>
@@ -52,7 +54,7 @@ export const Home = () => {
         </div>
       </div>
 
-      <div className="flex m-5" style={{ width: matches ? "50%" : "98%" }}>
+      <div className="basis-6/12 flex m-5">
         <div className="flex-1">
           <EntryList />
         </div>
