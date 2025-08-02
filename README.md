@@ -22,6 +22,7 @@
   - [x] checkbox
   - [x] hide done node
   - [x] change source of node
+  - [ ] due day
   - [ ] recurring task
   - [ ] goals
   - [ ] habbits positive/negative
@@ -34,6 +35,7 @@
   - [x] srart
   - [x] delete
   - [x] tags
+    - [ ] prevent update when no changes
   - [x] group by day
   - [x] total time by day
   - [ ] only one timer can be runned at the same time
@@ -47,13 +49,14 @@
   - [ ] change type
 - [ ] dashboard
   - [x] nodes done by today
-    - [x] show consumed time 
+    - [x] show consumed time
   - [ ] chart by node time
     - [x] basic chart
     - [ ] show percengage and time
   - [ ] chart by tag time
     - [x] basic chart
     - [ ] show percengage and time
+  - [ ] task for today/week/month
   - [ ] insights
   - [ ] cal-heatmap
 - [ ] layout
@@ -63,7 +66,6 @@
   - [ ] for time enries
   - [x] for compleated tasks in day
 - [ ] auth
-- [ ] task for week/month/day
 
 bugs:
 
@@ -71,6 +73,7 @@ bugs:
 
 tech:
 
+- [x] use zustand
 - [ ] rect query
   - [x] use react query
   - [x] update entries by pisemistic update
