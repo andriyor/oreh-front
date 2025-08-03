@@ -1,29 +1,13 @@
-import {
-  autoUpdate,
-  flip,
-  FloatingFocusManager,
-  offset,
-  shift,
-  useClick,
-  useDismiss,
-  useFloating,
-  useInteractions,
-  useRole,
-} from "@floating-ui/react";
+import { FloatingFocusManager } from "@floating-ui/react";
 import { useState } from "react";
 
 import { TagValues } from "../../tags/components/TagVlues";
-import {
-  EntryDatesWithNode,
-  EntryWithNode,
-} from "../../graph/components/types";
+import { EntryDatesWithNode, EntryWithNode } from "../../graph/components/types";
 import { TagDb, useTags } from "../../../api/tags";
 import { tagIcons } from "../../tags/types";
+import { useFloatingUI } from "../../../hooks/use-floating";
 
-export const EntryTags = (props: {
-  entry: EntryWithNode;
-  onUpdate: (entry: EntryDatesWithNode) => void;
-}) => {
+export const EntryTags = (props: { entry: EntryWithNode; onUpdate: (entry: EntryDatesWithNode) => void }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [entryTags, setEntryTags] = useState(props.entry.data);
   const { data: tags } = useTags();
@@ -41,27 +25,10 @@ export const EntryTags = (props: {
     }
   };
 
-  const { refs, floatingStyles, context } = useFloating({
-    open: isOpen,
-    // placement: 'bottom',
+  const { refs, floatingStyles, getReferenceProps, getFloatingProps, context } = useFloatingUI({
+    isOpen,
     onOpenChange,
-    middleware: [
-      offset(10),
-      flip({ fallbackAxisSideDirection: "end" }),
-      shift(),
-    ],
-    whileElementsMounted: autoUpdate,
   });
-
-  const click = useClick(context);
-  const dismiss = useDismiss(context);
-  const role = useRole(context);
-
-  const { getReferenceProps, getFloatingProps } = useInteractions([
-    click,
-    dismiss,
-    role,
-  ]);
 
   return (
     <>
@@ -89,10 +56,7 @@ export const EntryTags = (props: {
             style={{ ...floatingStyles, backgroundColor: "white" }}
             {...getFloatingProps()}
           >
-            <TagValues
-              currentTags={entryTags}
-              onChange={(tags) => setEntryTags(tags)}
-            />
+            <TagValues currentTags={entryTags} onChange={(tags) => setEntryTags(tags)} />
           </div>
         </FloatingFocusManager>
       )}
