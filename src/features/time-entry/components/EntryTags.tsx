@@ -12,11 +12,6 @@ export const EntryTags = (props: { entry: EntryWithNode; onUpdate: (entry: Entry
   const [entryTags, setEntryTags] = useState(props.entry.data);
   const { data: tags } = useTags();
 
-  const tagsMap = tags?.reduce<Record<string, TagDb>>((acc, curr) => {
-    acc[curr.id] = curr;
-    return acc;
-  }, {});
-
   const onOpenChange = (isCurrentlyOpen: boolean) => {
     setIsOpen(isCurrentlyOpen);
 
@@ -29,6 +24,11 @@ export const EntryTags = (props: { entry: EntryWithNode; onUpdate: (entry: Entry
     isOpen,
     onOpenChange,
   });
+
+  const tagsMap = tags?.reduce<Record<string, TagDb>>((acc, curr) => {
+    acc[curr.id] = curr;
+    return acc;
+  }, {});
 
   return (
     <>
