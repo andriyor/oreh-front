@@ -43,9 +43,12 @@ export type NodeDataDb = {
   entry: Entry;
   isChecked?: boolean;
   doneAt?: Date | null;
+  isCompleted?: boolean;
+
   // not stored properties
   commulativeDuration: number;
   totalTimeEntriersDuration: number;
+  parentId?: string;
 };
 
 export type NodePosition = {
@@ -60,6 +63,10 @@ export type NodePosition = {
 export type GrapNode = NodePosition & {
   id: string;
   dueDate?: Date | null;
+  recurrenceType?: "daily" | "weekly" | "monthly" | null;
+  isRecurring?: string | null;
+  isCompleted?: boolean;
+  parentId?: string;
   data: NodeDataDb;
 };
 
@@ -70,11 +77,18 @@ export type NodeData = NodeDataDb & {
   isRunning?: boolean;
   toggleExpand: (nodeId: NodeProps<TextNode>) => void;
   showChart: (nodeId: NodeProps<TextNode>) => void;
+
+  recurrenceType?: "daily" | "weekly" | "monthly" | null;
+  isRecurring?: boolean;
 };
 
 export type GrapNodeToUpdate = {
   id: string;
   dueDate?: Date | null;
+  recurrenceType?: "daily" | "weekly" | "monthly" | null;
+  isRecurring?: boolean;
+  parentId?: string;
+  isCompleted?: boolean;
   data?: NodeData;
 };
 

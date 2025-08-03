@@ -36,7 +36,10 @@ export const useNodeDataMutation = () => {
     mutationFn: async (nodeData: GrapNodeToUpdate) => {
       return await GraphApi.url(`/node/${nodeData.id}`)
         .patch({
+          parentId: nodeData.parentId,
           dueDate: nodeData.dueDate,
+          recurrenceType: nodeData.recurrenceType,
+          isRecurring: nodeData.isRecurring,
           data: {
             label: nodeData.data?.label,
             isChecked: nodeData.data?.isChecked,

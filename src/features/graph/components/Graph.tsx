@@ -1,28 +1,28 @@
-import { useCallback, useEffect, useRef } from "react";
 import {
-  ReactFlow,
-  Background,
-  Controls,
   addEdge,
-  useNodesState,
-  useEdgesState,
-  ConnectionLineType,
-  useReactFlow,
-  Position,
-  Edge,
-  getOutgoers,
-  FinalConnectionState,
+  Background,
   Connection,
+  ConnectionLineType,
+  Controls,
+  Edge,
+  FinalConnectionState,
+  getOutgoers,
+  Position,
+  ReactFlow,
+  useEdgesState,
+  useNodesState,
+  useReactFlow,
 } from "@xyflow/react";
+import { useCallback, useEffect, useRef } from "react";
 
 import "@xyflow/react/dist/style.css";
 
-import { ChartData, edgeTypes, GrapNode, nodeTypes } from "./types";
 import { GraphApi } from "../../../api";
-import { useDeleteNodeMutation } from "../../../api/node";
 import { useGraph } from "../../../api/graph";
+import { useDeleteNodeMutation } from "../../../api/node";
 import { useTimerStore } from "../../../store";
 import { getLayoutedElements, getOutgoersNested } from "../utils";
+import { ChartData, edgeTypes, GrapNode, nodeTypes } from "./types";
 
 let id = 1;
 const getId = () => `${id++}`;
@@ -38,17 +38,16 @@ export const GraphFlow = () => {
 
   useEffect(() => {
     if (graph) {
-      const { nodes: layoutedNodes, edges: layoutedEdges } =
-        getLayoutedElements(
-          graph.nodes.map((node: GrapNode) => {
-            return {
-              ...node,
-              type: "text-node",
-            };
-          }),
-          graph.edges,
-          "LR",
-        );
+      const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
+        graph.nodes.map((node: GrapNode) => {
+          return {
+            ...node,
+            type: "text-node",
+          };
+        }),
+        graph.edges,
+        "LR",
+      );
       setNodes(layoutedNodes);
       setEdges(layoutedEdges);
     }
@@ -58,12 +57,7 @@ export const GraphFlow = () => {
 
   const onConnect = useCallback(
     (params: Connection) =>
-      setEdges((eds) =>
-        addEdge(
-          { ...params, type: ConnectionLineType.SmoothStep, animated: true },
-          eds,
-        ),
-      ),
+      setEdges((eds) => addEdge({ ...params, type: ConnectionLineType.SmoothStep, animated: true }, eds)),
     [],
   );
 
@@ -86,21 +80,15 @@ export const GraphFlow = () => {
 
     const outgoerNodeIds = outgoerNodes.map((n) => n.id);
     // filter in case click on same node
-    const withoutAlreadyHidden = outgoerNodeIds.filter(
-      (id) => !hidden.current.includes(id),
-    );
+    const withoutAlreadyHidden = outgoerNodeIds.filter((id) => !hidden.current.includes(id));
 
     // filter already hidden in other three
-    const withoutHiddenIds = hidden.current.filter(
-      (id) => !outgoerNodeIds.includes(id),
-    );
+    const withoutHiddenIds = hidden.current.filter((id) => !outgoerNodeIds.includes(id));
 
     hidden.current = [...withoutHiddenIds, ...withoutAlreadyHidden];
 
     if (isCollapsed.current.includes(node.id)) {
-      isCollapsed.current = [
-        ...isCollapsed.current.filter((nodeId) => nodeId !== node.id),
-      ];
+      isCollapsed.current = [...isCollapsed.current.filter((nodeId) => nodeId !== node.id)];
     } else {
       isCollapsed.current = [...isCollapsed.current, node.id];
     }
@@ -122,8 +110,14 @@ export const GraphFlow = () => {
   const augmentedNodes = nodes.map((node) => {
     return {
       ...node,
+      parentId: undefined,
       data: {
         ...node.data,
+        isCompleted: node.isCompleted,
+        isRecurring: node.isRecurring,
+        dueDate: node.dueDate || null,
+        reccurrenceType: node.recurrenceType || null,
+        parentId: node.parentId,
         toggleExpand,
         showChart,
       },
@@ -138,8 +132,7 @@ export const GraphFlow = () => {
       if (!connectionState.isValid) {
         // we need to remove the wrapper bounds, in order to get the correct position
         const id = getId();
-        const { clientX, clientY } =
-          "changedTouches" in event ? event.changedTouches[0] : event;
+        const { clientX, clientY } = "changedTouches" in event ? event.changedTouches[0] : event;
         const newNode = {
           id,
           position: screenToFlowPosition({
@@ -159,16 +152,10 @@ export const GraphFlow = () => {
           });
 
         setNodes((nds) => nds.concat(newNode));
-        setEdges((eds) =>
-          eds.concat({ id, source: connectionState.fromNode.id, target: id }),
-        );
+        setEdges((eds) => eds.concat({ id, source: connectionState.fromNode.id, target: id }));
       }
 
-      if (
-        connectionState.isValid &&
-        connectionState.fromNode?.sourcePosition === "right" &&
-        connectionState.toNode
-      ) {
+      if (connectionState.isValid && connectionState.fromNode?.sourcePosition === "right" && connectionState.toNode) {
         const targetId = connectionState.fromNode.id;
         const sourceId = connectionState.toNode.id;
         GraphApi.url("/node/cgange")

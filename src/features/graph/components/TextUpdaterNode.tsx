@@ -1,16 +1,17 @@
+import { FloatingFocusManager } from "@floating-ui/react";
+import { DateCalendar, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { Handle, NodeProps, Position } from "@xyflow/react";
 import { useCallback, useState } from "react";
 
 import { Timer, TimerApp } from "./Timer";
 import { TextNode } from "./types";
 
-import { FloatingFocusManager } from "@floating-ui/react";
-import { DateCalendar, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { useEntryMutation } from "../../../api/entry";
 import { useNodeDataMutation } from "../../../api/node";
 import { debounce } from "../../../helpers";
 import { useFloatingUI } from "../../../hooks/use-floating";
+
 import CalendarIcon from "../../../icons/calendar.svg";
 import MinusIcon from "../../../icons/minus-solid.svg";
 import PlusIcon from "../../../icons/plus-solid.svg";
@@ -58,6 +59,9 @@ export function TextUpdaterNode(props: NodeProps<TextNode>) {
   const onCheckboxChange = (value: boolean) => {
     nodeDataMutation.mutate({
       id: props.id,
+      parentId: props.data.parentId,
+      isCompleted: value,
+      isRecurring: props.data.isRecurring,
       data: { ...props.data, isChecked: value, doneAt: value ? new Date() : null },
     });
   };
@@ -72,6 +76,15 @@ export function TextUpdaterNode(props: NodeProps<TextNode>) {
     nodeDataMutation.mutate({
       id: props.id,
       dueDate: date,
+    });
+  };
+
+  const handleDaily = () => {
+    nodeDataMutation.mutate({
+      id: props.id,
+      dueDate: new Date(),
+      recurrenceType: "daily",
+      isRecurring: true,
     });
   };
 
@@ -90,7 +103,7 @@ export function TextUpdaterNode(props: NodeProps<TextNode>) {
             id="checkbox"
             type="checkbox"
             name="checkbox"
-            defaultChecked={props.data.isChecked}
+            defaultChecked={props.data.isCompleted}
             className="nodrag"
             onChange={(e) => onCheckboxChange(e.target.checked)}
           />
@@ -108,11 +121,11 @@ export function TextUpdaterNode(props: NodeProps<TextNode>) {
           </button>
         </div> */}
 
-        <div className="mr-3">
-          <button onClick={() => {}}>
+        {props.data.isRecurring && (
+          <div className="mr-3">
             <img src={RecurringIcon} height="15px" />
-          </button>
-        </div>
+          </div>
+        )}
 
         <div className="mr-3" {...getReferenceProps()}>
           <button onClick={() => {}}>
@@ -144,6 +157,7 @@ export function TextUpdaterNode(props: NodeProps<TextNode>) {
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DateCalendar value={calendarValue} onChange={handleDueDateChange} />
             </LocalizationProvider>
+            <button onClick={handleDaily}>every day</button>
           </div>
         </FloatingFocusManager>
       )}
