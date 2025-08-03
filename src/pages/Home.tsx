@@ -5,6 +5,7 @@ import { VictoryPie, VictoryTheme } from "victory";
 import { TopTimer } from "../components/Timer";
 import { DoneToday } from "../features/dashboard/components/DoneToday";
 import { HeatMap } from "../features/dashboard/components/HeatMap";
+import { Planned } from "../features/dashboard/components/Planned";
 import { GraphFlow } from "../features/graph/components/Graph";
 import { ChartByTags } from "../features/tags/components/TagChart";
 import { TagValues } from "../features/tags/components/TagVlues";
@@ -21,11 +22,7 @@ export const Home = () => {
         <TopTimer />
         <div className="mb-4 p-5 border-1 rounded-md border-solid border-gray-600">
           Current tags:
-          <TagValues
-            isHorizontal={true}
-            currentTags={checkboxState}
-            onChange={(state) => setCheckboxState(state)}
-          />
+          <TagValues isHorizontal={true} currentTags={checkboxState} onChange={(state) => setCheckboxState(state)} />
         </div>
         <div style={{ height: "600px" }}>
           <ReactFlowProvider>
@@ -56,6 +53,7 @@ export const Home = () => {
 
       <div className="basis-6/12 flex m-5">
         <div className="flex-1">
+          <Planned />
           <EntryList />
         </div>
       </div>

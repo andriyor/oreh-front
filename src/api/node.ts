@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+import { GrapNode, GrapNodeToUpdate } from "../features/graph/components/types";
 import { GraphApi } from "./index";
-import { GrapNode, NodeDataToUpdate } from "../features/graph/components/types";
 
 export const useNodes = (range: { from: string; to: string }) => {
   return useQuery<GrapNode[]>({
@@ -28,19 +28,21 @@ export const usePlanned = () => {
       return await GraphApi.url("/node/planned").get().json();
     },
   });
-}
+};
 
 export const useNodeDataMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (nodeData: NodeDataToUpdate) => {
-      const { label, isChecked, doneAt } = nodeData;
-      return await GraphApi.url(`/node/${nodeData.nodeIdToUpdate}`)
-        .patch({data: {
-          label,
-          isChecked,
-          doneAt,
-        }})
+    mutationFn: async (nodeData: GrapNodeToUpdate) => {
+      return await GraphApi.url(`/node/${nodeData.id}`)
+        .patch({
+          dueDate: nodeData.dueDate,
+          data: {
+            label: nodeData.data?.label,
+            isChecked: nodeData.data?.isChecked,
+            doneAt: nodeData.data?.doneAt,
+          },
+        })
         .json();
     },
     onSuccess: () => {
@@ -48,6 +50,9 @@ export const useNodeDataMutation = () => {
       // TODO: invalidate only for label changes and not checkbox
       queryClient.invalidateQueries({ queryKey: ["entry"] });
       // fetchGraph();
+    },
+    onError: (error) => {
+      console.error("Error updating node data:", error);
     },
   });
 };

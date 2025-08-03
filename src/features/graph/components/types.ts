@@ -1,4 +1,4 @@
-import type { Node, Position, NodeTypes, NodeProps, EdgeTypes } from "@xyflow/react";
+import type { EdgeTypes, Node, NodeProps, NodeTypes, Position } from "@xyflow/react";
 
 import { TextUpdaterNode } from "./TextUpdaterNode";
 
@@ -59,6 +59,7 @@ export type NodePosition = {
 
 export type GrapNode = NodePosition & {
   id: string;
+  dueDate?: Date | null;
   data: NodeDataDb;
 };
 
@@ -71,8 +72,10 @@ export type NodeData = NodeDataDb & {
   showChart: (nodeId: NodeProps<TextNode>) => void;
 };
 
-export type NodeDataToUpdate = NodeData & {
-  nodeIdToUpdate: string;
+export type GrapNodeToUpdate = {
+  id: string;
+  dueDate?: Date | null;
+  data?: NodeData;
 };
 
 export type Edge = {
@@ -88,7 +91,6 @@ export type Graph = {
   edges: Edge[];
   nodes: GrapNode[];
 };
-
 
 export const nodeTypes = {
   "text-node": TextUpdaterNode,

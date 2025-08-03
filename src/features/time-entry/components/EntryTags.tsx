@@ -1,11 +1,11 @@
 import { FloatingFocusManager } from "@floating-ui/react";
 import { useState } from "react";
 
-import { TagValues } from "../../tags/components/TagVlues";
-import { EntryDatesWithNode, EntryWithNode } from "../../graph/components/types";
 import { TagDb, useTags } from "../../../api/tags";
-import { tagIcons } from "../../tags/types";
 import { useFloatingUI } from "../../../hooks/use-floating";
+import { EntryDatesWithNode, EntryWithNode } from "../../graph/components/types";
+import { TagValues } from "../../tags/components/TagVlues";
+import { tagIcons } from "../../tags/types";
 
 export const EntryTags = (props: { entry: EntryWithNode; onUpdate: (entry: EntryDatesWithNode) => void }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,14 +37,12 @@ export const EntryTags = (props: { entry: EntryWithNode; onUpdate: (entry: Entry
           Object.entries(props.entry.data).map(([id, val]) => {
             const tagLabel = tagsMap[id]?.label;
             return (
-              <>
-                {tagLabel && (
-                  <div className="flex mr-4" key={id}>
-                    <div className="mr-1">{tagLabel}:</div>
-                    <div>{tagIcons[val]}</div>
-                  </div>
-                )}
-              </>
+              tagLabel && (
+                <div className="flex mr-4" key={id}>
+                  <div className="mr-1">{tagLabel}:</div>
+                  <div>{tagIcons[val]}</div>
+                </div>
+              )
             );
           })}
       </div>

@@ -1,23 +1,16 @@
 import { useState } from "react";
 
+import DotsIcon from "../../../icons/ellipsis-v-solid.svg";
 import Play from "../../../icons/play-solid.svg";
 import TrashIcon from "../../../icons/trash-solid.svg";
-import DotsIcon from "../../../icons/ellipsis-v-solid.svg";
 
-import {
-  EntryDatesWithNode,
-  EntryWithNode,
-} from "../../graph/components/types";
-import { Time } from "./Time";
-import { formatSeconds } from "../../../helpers";
-import { EntryTags } from "./EntryTags";
 import { useUpdateEntryMutation } from "../../../api/entry";
+import { formatSeconds } from "../../../helpers";
+import { EntryDatesWithNode, EntryWithNode } from "../../graph/components/types";
+import { EntryTags } from "./EntryTags";
+import { Time } from "./Time";
 
-export const Entry = (props: {
-  entry: EntryWithNode;
-  onStartTimer: () => void;
-  onDelete: () => void;
-}) => {
+export const Entry = (props: { entry: EntryWithNode; onStartTimer: () => void; onDelete: () => void }) => {
   const [localEntry, setLocalEntry] = useState(props.entry);
   const updateEntryMutation = useUpdateEntryMutation(props.entry.id);
 
@@ -36,9 +29,7 @@ export const Entry = (props: {
         borderBottomWidth: "1px",
       }}
     >
-      <div className="basis-3/12 mr-3">
-        {props.entry.node.data?.label || ""}
-      </div>
+      <div className="basis-3/12 mr-3">{props.entry.node.data?.label || ""}</div>
 
       <div className="basis-6/12">
         <EntryTags entry={props.entry} onUpdate={handleUpdate} />

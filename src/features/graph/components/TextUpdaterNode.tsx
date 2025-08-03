@@ -1,19 +1,21 @@
-import { useCallback, useState } from "react";
 import { Handle, NodeProps, Position } from "@xyflow/react";
+import { useCallback, useState } from "react";
 
-import { TextNode } from "./types";
 import { Timer, TimerApp } from "./Timer";
+import { TextNode } from "./types";
 
-// import DotsIcon from "../../../icons/ellipsis-v-solid.svg";
-import StatsIcon from "../../../icons/stats.svg";
-import RecurringIcon from "../../../icons/refresh.svg";
+import { FloatingFocusManager } from "@floating-ui/react";
+import { DateCalendar, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
+import { useEntryMutation } from "../../../api/entry";
+import { useNodeDataMutation } from "../../../api/node";
+import { debounce } from "../../../helpers";
+import { useFloatingUI } from "../../../hooks/use-floating";
 import CalendarIcon from "../../../icons/calendar.svg";
 import MinusIcon from "../../../icons/minus-solid.svg";
 import PlusIcon from "../../../icons/plus-solid.svg";
+import RecurringIcon from "../../../icons/refresh.svg";
 import { useTimerStore } from "../../../store";
-import { useNodeDataMutation } from "../../../api/node";
-import { useEntryMutation } from "../../../api/entry";
-import { debounce } from "../../../helpers";
 
 export type TimeEntry = {
   time: number;
@@ -23,25 +25,29 @@ export type TimeEntry = {
 
 export function TextUpdaterNode(props: NodeProps<TextNode>) {
   const runningNode = useTimerStore((state) => state.runningNode);
-  const [inputValue, setInputValue] = useState(props.data.label || "");
+  const [nodeLabel, setNodeLabel] = useState(props.data.label || "");
   const nodeDataMutation = useNodeDataMutation();
   const entryMutation = useEntryMutation();
   const selectedNodeId = useTimerStore((state) => state.selectedNodeId);
+  const [isCallendarOpen, setIsCalendarOpen] = useState(false);
+  const [calendarValue, setCalendarValue] = useState<Date>(new Date());
 
   const handleDebouncedChange = useCallback(
     debounce((value: string) => {
       nodeDataMutation.mutate({
-        nodeIdToUpdate: props.id,
-        ...props.data,
-        label: value,
+        id: props.id,
+        data: {
+          ...props.data,
+          label: value,
+        },
       });
     }, 500),
     [],
   );
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNodeLabelChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
-    setInputValue(newValue);
+    setNodeLabel(newValue);
     handleDebouncedChange(newValue);
   };
 
@@ -51,10 +57,21 @@ export function TextUpdaterNode(props: NodeProps<TextNode>) {
 
   const onCheckboxChange = (value: boolean) => {
     nodeDataMutation.mutate({
-      nodeIdToUpdate: props.id,
-      ...props.data,
-      isChecked: value,
-      doneAt: value ? new Date() : null,
+      id: props.id,
+      data: { ...props.data, isChecked: value, doneAt: value ? new Date() : null },
+    });
+  };
+
+  const { refs, floatingStyles, getReferenceProps, getFloatingProps, context } = useFloatingUI({
+    isOpen: isCallendarOpen,
+    onOpenChange: setIsCalendarOpen,
+  });
+
+  const handleDueDateChange = (date: Date) => {
+    setCalendarValue(date);
+    nodeDataMutation.mutate({
+      id: props.id,
+      dueDate: date,
     });
   };
 
@@ -63,10 +80,7 @@ export function TextUpdaterNode(props: NodeProps<TextNode>) {
       style={{
         padding: "10px",
         border: "solid",
-        borderBlockColor:
-          selectedNodeId === props.id || runningNode?.id === props.id
-            ? "red"
-            : "black",
+        borderBlockColor: selectedNodeId === props.id || runningNode?.id === props.id ? "red" : "black",
       }}
     >
       <Handle type="target" position={Position.Left} />
@@ -82,20 +96,10 @@ export function TextUpdaterNode(props: NodeProps<TextNode>) {
           />
         </div>
         <div style={{ marginRight: "10px" }}>
-          <input
-            id="text"
-            name="text"
-            value={inputValue}
-            onChange={handleChange}
-            className="nodrag"
-          />
+          <input id="text" name="text" value={nodeLabel} onChange={handleNodeLabelChange} className="nodrag" />
         </div>
         <div>
-          <TimerApp
-            node={props}
-            duration={props.data.commulativeDuration}
-            onStop={handleStop}
-          />
+          <TimerApp node={props} duration={props.data.commulativeDuration} onStop={handleStop} />
         </div>
 
         {/* <div className="mr-3">
@@ -103,14 +107,14 @@ export function TextUpdaterNode(props: NodeProps<TextNode>) {
             <img src={StatsIcon} height="15px" />
           </button>
         </div> */}
-        
+
         <div className="mr-3">
           <button onClick={() => {}}>
             <img src={RecurringIcon} height="15px" />
           </button>
         </div>
 
-        <div className="mr-3">
+        <div className="mr-3" {...getReferenceProps()}>
           <button onClick={() => {}}>
             <img src={CalendarIcon} height="15px" />
           </button>
@@ -128,6 +132,21 @@ export function TextUpdaterNode(props: NodeProps<TextNode>) {
       </div>
 
       <Handle type="source" position={Position.Right} />
+
+      {isCallendarOpen && (
+        <FloatingFocusManager context={context} modal={false}>
+          <div
+            className="rounded-lg shadow-xl p-4"
+            ref={refs.setFloating}
+            style={{ ...floatingStyles, backgroundColor: "white" }}
+            {...getFloatingProps()}
+          >
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DateCalendar value={calendarValue} onChange={handleDueDateChange} />
+            </LocalizationProvider>
+          </div>
+        </FloatingFocusManager>
+      )}
     </div>
   );
 }
