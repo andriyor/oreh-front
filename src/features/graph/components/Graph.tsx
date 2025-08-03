@@ -3,7 +3,6 @@ import {
   ReactFlow,
   Background,
   Controls,
-  MiniMap,
   addEdge,
   useNodesState,
   useEdgesState,
@@ -199,7 +198,6 @@ export const GraphFlow = () => {
       fitView
     >
       <Background />
-      {/* <MiniMap /> */}
       <Controls />
     </ReactFlow>
   );

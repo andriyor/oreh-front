@@ -4,7 +4,10 @@ import { Handle, NodeProps, Position } from "@xyflow/react";
 import { TextNode } from "./types";
 import { Timer, TimerApp } from "./Timer";
 
-import DotsIcon from "../../../icons/ellipsis-v-solid.svg";
+// import DotsIcon from "../../../icons/ellipsis-v-solid.svg";
+import StatsIcon from "../../../icons/stats.svg";
+import RecurringIcon from "../../../icons/refresh.svg";
+import CalendarIcon from "../../../icons/calendar.svg";
 import MinusIcon from "../../../icons/minus-solid.svg";
 import PlusIcon from "../../../icons/plus-solid.svg";
 import { useTimerStore } from "../../../store";
@@ -95,9 +98,21 @@ export function TextUpdaterNode(props: NodeProps<TextNode>) {
           />
         </div>
 
-        <div className="mr-3">
+        {/* <div className="mr-3">
           <button onClick={() => props.data.showChart(props)}>
-            <img src={DotsIcon} height="15px" />
+            <img src={StatsIcon} height="15px" />
+          </button>
+        </div> */}
+        
+        <div className="mr-3">
+          <button onClick={() => {}}>
+            <img src={RecurringIcon} height="15px" />
+          </button>
+        </div>
+
+        <div className="mr-3">
+          <button onClick={() => {}}>
+            <img src={CalendarIcon} height="15px" />
           </button>
         </div>
 

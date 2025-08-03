@@ -16,7 +16,7 @@ export const getOutgoersNested = (
 
 const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
 
-const nodeWidth = 450;
+const nodeWidth = 500;
 const nodeHeight = 36;
 
 export const getLayoutedElements = (

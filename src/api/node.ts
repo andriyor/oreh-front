@@ -21,17 +21,26 @@ export const useAggregatedNodes = (range: { from: string; to: string }) => {
   });
 };
 
+export const usePlanned = () => {
+  return useQuery<GrapNode[]>({
+    queryKey: ["planned"],
+    queryFn: async () => {
+      return await GraphApi.url("/node/planned").get().json();
+    },
+  });
+}
+
 export const useNodeDataMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (nodeData: NodeDataToUpdate) => {
       const { label, isChecked, doneAt } = nodeData;
       return await GraphApi.url(`/node/${nodeData.nodeIdToUpdate}`)
-        .patch({
+        .patch({data: {
           label,
           isChecked,
           doneAt,
-        })
+        }})
         .json();
     },
     onSuccess: () => {
