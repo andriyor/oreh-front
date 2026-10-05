@@ -2,7 +2,7 @@
 
 Personal task graph and time tracker. Tasks are nodes in a tree you can edit, check off, schedule and track time against. Time entries are tagged and summarized on a dashboard, a calendar and tag charts.
 
-Frontend only. It expects the backend API at `http://localhost:3000` (see `src/api/index.ts`).
+Frontend only. The backend is [oreh-backend](https://github.com/andriyor/oreh-backend); run it first, it serves the API at `http://localhost:3000` (see `src/api/index.ts`).
 
 ## Stack
 
